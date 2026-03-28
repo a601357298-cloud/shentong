@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python 选择题练习</title>
+  <title>图数据库选择题练习</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -203,15 +203,50 @@
       margin-bottom: 6px;
     }
 
-    .code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      background: #111827;
-      color: #e5e7eb;
-      border-radius: 12px;
-      padding: 12px 14px;
-      overflow-x: auto;
-      font-size: 14px;
-      margin-top: 10px;
+    .summary-panel {
+      margin-top: 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .summary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    .action-btn.primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .action-btn.primary:hover {
+      opacity: .92;
+      transform: translateY(-1px);
+    }
+
+    .action-btn.secondary {
+      background: #eef2ff;
+      color: #1e3a8a;
+      border: 1px solid #c7d2fe;
+    }
+
+    .action-btn.secondary:hover {
+      background: #e0e7ff;
     }
 
     .footer {
@@ -223,8 +258,10 @@
 
     @media (max-width: 640px) {
       .container { width: min(100% - 20px, 960px); padding-top: 18px; }
-      .hero, .question-card { padding: 18px; border-radius: 18px; }
+      .hero, .question-card, .summary-panel { padding: 18px; border-radius: 18px; }
       .question-title { font-size: 18px; }
+      .summary-actions { flex-direction: column; }
+      .action-btn { width: 100%; }
     }
   </style>
 </head>
@@ -232,242 +269,350 @@
   <div class="container">
     <section class="hero">
       <div class="badge">静态网站 · index.html</div>
-      <h1>Python 选择题练习站</h1>
-      <p class="lead">题目整理自飞书里的《Python 学习笔记》。点击任意选项后，会立即在题目下方显示对错和解析，专治“看着会、写着翻车”。</p>
+      <h1>图数据库选择题练习站</h1>
+      <p class="lead">题目整理自飞书里的《图数据库学习笔记-2026-03-26》。点击任意选项后，会直接在题目下方显示对错和解析，顺手还能把错题一键导出成 Markdown。</p>
       <div class="meta">
         <div class="meta-card">
           <strong>12</strong>
           <span>道单选题</span>
         </div>
         <div class="meta-card">
-          <strong>4</strong>
-          <span>核心主题：循环 / 异常 / 字典 / 坑点</span>
+          <strong>6</strong>
+          <span>核心主题：更新 / 路径 / 建模 / 导入 / 转型 / 易错点</span>
         </div>
         <div class="meta-card">
-          <strong>即点即看</strong>
-          <span>答案与解析直接展开</span>
+          <strong>一键导出</strong>
+          <span>做完题可导出错题 Markdown</span>
         </div>
       </div>
     </section>
 
     <main id="quiz" class="quiz-list"></main>
 
-    <p class="footer">做题建议：先凭感觉点，再看解析，别一上来就和答案谈恋爱。</p>
+    <section class="summary-panel">
+      <h2 style="margin:0 0 8px;">做完别急着跑</h2>
+      <p id="summaryText" style="margin:0;color:var(--muted);">先把题点完。页面底部这个按钮，专门负责把你这次翻车的题打包带走。</p>
+      <div class="summary-actions">
+        <button id="exportWrongBtn" class="action-btn primary">导出错题 Markdown</button>
+        <button id="resetBtn" class="action-btn secondary">重做一遍</button>
+      </div>
+    </section>
+
+    <p class="footer">复习建议：先自己选，再看解析。别让 shortestPath 和 MERGE 联手把你送进沟里。</p>
   </div>
 
   <script>
     const questions = [
       {
-        type: "循环语句",
-        question: "`while` 循环最适合下面哪种场景？",
+        id: 1,
+        tag: '更新数据',
+        question: '在图数据库笔记中，更新属性时 `WHERE` 和 `SET` 的正确顺序是？',
         options: [
-          "已知循环次数，固定执行 3 次",
-          "条件成立就重复执行，直到条件不成立",
-          "只在列表中遍历元素时使用",
-          "只能搭配 `break` 才能运行"
+          'MATCH ... SET ... WHERE ...',
+          'MATCH ... WHERE ... SET ...',
+          'WHERE ... MATCH ... SET ...',
+          'SET ... MATCH ... WHERE ...'
         ],
         answer: 1,
-        explanation: "`while` 的典型场景就是‘条件成立就一直执行’。它不要求事先知道次数，更适合持续判断状态。"
+        explanation: '笔记里明确强调：常见写法是 `MATCH ... WHERE ... SET ...`，`WHERE` 要写在 `SET` 前面。把顺序写反，语法和逻辑都容易翻车。'
       },
       {
-        type: "流程控制",
-        question: "下面关于 `break` 的说法，正确的是哪一项？",
+        id: 2,
+        tag: 'EXISTS',
+        question: '下面哪种写法最符合笔记中对 `EXISTS()` 的说明？',
         options: [
-          "跳过本轮循环剩余代码，进入下一轮",
-          "立刻结束当前循环",
-          "结束整个 Python 程序",
-          "只有 `while` 循环能用，`for` 循环不能用"
+          'WHERE EXISTS(MATCH (n) RETURN n)',
+          'WHERE EXISTS(n.name)',
+          'WHERE EXISTS = n.name',
+          'WHERE MATCH EXISTS(n.name)'
         ],
         answer: 1,
-        explanation: "`break` 的作用是立刻跳出当前循环；跳过本轮而进入下一轮的是 `continue`。"
+        explanation: '笔记强调：`EXISTS()` 的小括号里通常直接写属性或条件，不需要再套一层 `MATCH`。因此 `WHERE EXISTS(n.name)` 才是这里的正确思路。'
       },
       {
-        type: "流程控制",
-        question: "当 `for i in range(5)` 中 `i == 2` 时执行 `continue`，会发生什么？",
+        id: 3,
+        tag: '路径节点处理',
+        question: '如果想对路径中的节点做条件筛选并返回属性，笔记推荐的思路是？',
         options: [
-          "循环立即结束",
-          "报错，因为 `continue` 不能写在 `for` 里",
-          "跳过本轮剩余代码，直接进入下一轮",
-          "重新从 `i == 0` 开始"
-        ],
-        answer: 2,
-        explanation: "`continue` 是‘这轮先别聊了，直接下一轮’。它不会终止整个循环，只会跳过当前轮的剩余语句。"
-      },
-      {
-        type: "异常处理",
-        question: "在 `try / except / else / finally` 结构中，`else` 会在什么时候执行？",
-        options: [
-          "只要写了就一定执行",
-          "发生异常时执行",
-          "没有发生异常时执行",
-          "在 `finally` 之后执行"
-        ],
-        answer: 2,
-        explanation: "`else` 只有在 `try` 里的代码没有抛出异常时才会执行。`finally` 则是不管有没有异常都执行。"
-      },
-      {
-        type: "异常处理",
-        question: "下面哪一项最符合 `finally` 的作用？",
-        options: [
-          "捕获指定异常",
-          "记录日志，但只有出错时运行",
-          "无论是否出错都会执行",
-          "替代 `except` 使用"
-        ],
-        answer: 2,
-        explanation: "`finally` 是兜底收尾位。比如关闭文件、释放资源、打印结束语，无论报错与否都能跑到这里。"
-      },
-      {
-        type: "字典方法",
-        question: "如果想同时拿到字典的键和值，最常用的方法是哪一个？",
-        options: [
-          "`info.keys()`",
-          "`info.values()`",
-          "`info.items()`",
-          "`info.get()`"
-        ],
-        answer: 2,
-        explanation: "`items()` 返回键值对视图，遍历时可以直接写成 `for key, value in info.items():`。"
-      },
-      {
-        type: "字典方法",
-        question: "下面哪段代码最适合遍历字典 `info` 的所有值？",
-        options: [
-          "`for value in info.values(): print(value)`",
-          "`for value in info.items(): print(value)`",
-          "`for value in info.keys(): print(value[1])`",
-          "`print(info.value())`"
+          '先用 `nodes(p)` 取出路径节点，再结合条件处理',
+          '只能直接对路径 `p` 使用 `SUM`',
+          '必须先把路径转成 CSV 再判断',
+          '路径中的节点无法做条件判断'
         ],
         answer: 0,
-        explanation: "想要所有值，用 `values()` 最直接；`items()` 拿到的是键值对，`keys()` 拿到的是键。"
+        explanation: '笔记给出的典型思路是先 `nodes(p)` 取出路径节点，再用 `n IN nodes(p) WHERE 条件 | 返回内容` 这种类似列表推导式的形式做筛选和返回。'
       },
       {
-        type: "易错点",
-        question: "为什么遍历列表时直接 `remove()` 可能删不干净？",
+        id: 4,
+        tag: '标签判断',
+        question: '判断节点 `n` 是否属于“人员”这一类，正确写法是？',
         options: [
-          "因为 `remove()` 只能删除字符串",
-          "因为删除后列表索引变化，遍历节奏被打乱",
-          "因为 Python 不允许删除列表元素",
-          "因为 `for` 循环会自动复制一份列表"
-        ],
-        answer: 1,
-        explanation: "一边遍历一边删，元素会前移，索引节奏乱掉，所以有些元素会漏删。这就是经典的‘边走边拆地板’。"
-      },
-      {
-        type: "易错点",
-        question: "以下哪种方式更推荐用于删除列表中不满足条件的元素？",
-        options: [
-          "边遍历原列表边 `remove()`",
-          "列表推导式重新过滤生成列表",
-          "先把列表转成字符串再删",
-          "只要加个 `print()` 就没问题"
-        ],
-        answer: 1,
-        explanation: "列表推导式是最稳妥、最清爽的办法之一，例如：`my_list = [x for x in my_list if not condition(x)]`。",
-        code: "my_list = [x for x in my_list if not condition(x)]"
-      },
-      {
-        type: "字典视图",
-        question: "为什么 `items = info.items(); print(items[0])` 这类写法会报错？",
-        options: [
-          "因为字典里不能有两个键",
-          "因为 `items()` 返回的是视图对象，不是列表",
-          "因为 `print()` 不能打印字典",
-          "因为 `items()` 只能在函数里用"
-        ],
-        answer: 1,
-        explanation: "`dict.items()` 返回的是视图对象，不能像列表那样直接按索引取值。要么转成 `list(info.items())`，要么直接遍历。",
-        code: "list(info.items())[0]"
-      },
-      {
-        type: "审计工具开发",
-        question: "做审计小工具时，下列哪种场景最适合优先加异常处理？",
-        options: [
-          "用户输入、文件读取、数据转换",
-          "给变量起名字",
-          "给代码加空行",
-          "把注释写成三种颜色"
-        ],
-        answer: 0,
-        explanation: "笔记里特别提到：用户输入、文件读取、数据转换、接口请求这些地方最容易翻车，异常处理能显著提高容错性。"
-      },
-      {
-        type: "综合理解",
-        question: "下面哪一句最贴近这份笔记的核心提醒？",
-        options: [
-          "Python 难点主要在安装解释器",
-          "Python 只要会语法就不会出错",
-          "真正容易翻车的是那些‘看起来能跑，结果跑歪了’的细节",
-          "只要会 `while` 就能写审计系统"
+          'n = 人员',
+          'n == 人员',
+          'n:人员',
+          'type(n) = 人员标签'
         ],
         answer: 2,
-        explanation: "这份笔记的重点不是炫技，而是避坑：循环、异常、字典和列表修改这些细节，看着平平无奇，最容易让代码表面正常、结果跑偏。"
+        explanation: '笔记反复提醒：判断节点类型不是用等于号，而是用冒号表示标签，所以写法应是 `n:人员`。'
+      },
+      {
+        id: 5,
+        tag: '最短路径',
+        question: '关于 `shortestPath()` 和 `allShortestPaths()`，下列说法哪项正确？',
+        options: [
+          '`shortestPath()` 返回所有最短路径，`allShortestPaths()` 只返回一条',
+          '`shortestPath()` 返回一条最短路径，`allShortestPaths()` 返回所有同长最短路径',
+          '两者作用完全一样，只是名字不同',
+          '`allShortestPaths()` 只能用于一跳路径'
+        ],
+        answer: 1,
+        explanation: '这个是笔记里的高频考点：`shortestPath()` 找一条最短路径；`allShortestPaths()` 找所有长度同样最短的路径。'
+      },
+      {
+        id: 6,
+        tag: '路径跳数',
+        question: '在路径模式中，哪一个表示“多跳”？',
+        options: [
+          '[]',
+          '[?]',
+          '[*]',
+          '[=]'
+        ],
+        answer: 2,
+        explanation: '笔记特别提醒：`[]` 是一跳，`[*]` 才表示多跳。这个地方很容易凭感觉写错。'
+      },
+      {
+        id: 7,
+        tag: '字符串处理',
+        question: '关于 `substring()` 的说法，哪项符合笔记内容？',
+        options: [
+          '下标从 1 开始',
+          '只能用于数字字段',
+          '下标从 0 开始，可做固定位置判断',
+          '只能截取到字符串末尾，不能指定长度'
+        ],
+        answer: 2,
+        explanation: '笔记明确写了：`substring()` 常用于提取字符串某一段，下标从 `0` 开始，做固定位置判断也很常见。'
+      },
+      {
+        id: 8,
+        tag: '字段建模',
+        question: '身份证号、公司编号、项目编号这类字段，笔记建议优先存成什么类型？',
+        options: [
+          '整数',
+          '浮点数',
+          '字符串',
+          '布尔值'
+        ],
+        answer: 2,
+        explanation: '这类编号字段可能很长、可能有前导零，用数字类型容易精度失真或把前导零吃掉，所以笔记建议优先存字符串。'
+      },
+      {
+        id: 9,
+        tag: '建模原则',
+        question: '图数据库建模的核心三分法是什么？',
+        options: [
+          '实体做关系，联系做节点，描述做表',
+          '实体做节点，联系做关系，描述做属性',
+          '实体做属性，联系做节点，描述做关系',
+          '实体做表，联系做字段，描述做索引'
+        ],
+        answer: 1,
+        explanation: '这是笔记里的建模主线：实体做节点，联系做关系，描述做属性。后面审批场景那个例子，就是拿这个原则做延展。'
+      },
+      {
+        id: 10,
+        tag: 'CSV 导入',
+        question: '关于 `MERGE` 和 `SET` 的分工，哪项是笔记推荐的稳妥写法？',
+        options: [
+          '`MERGE` 放所有属性，`SET` 尽量不用',
+          '`MERGE` 只放唯一标识字段，其他描述字段交给 `SET`',
+          '`SET` 只负责唯一标识，其他都放 `MERGE`',
+          '`CREATE` 和 `MERGE` 完全等价，随便写'
+        ],
+        answer: 1,
+        explanation: '笔记专门强调：`MERGE` 负责“认身份”，只放唯一键；`SET` 负责“补描述”。这样后续补数据、更新数据、重复导入时更稳。'
+      },
+      {
+        id: 11,
+        tag: '关系导入',
+        question: '在导入关系时，为什么不建议把“股权比例”这种易变属性直接写进关系 `MERGE` 的身份里？',
+        options: [
+          '因为关系不能有属性',
+          '因为会导致关系方向自动反转',
+          '因为易变属性会干扰身份匹配，后续更新和重复导入不稳定',
+          '因为 `MERGE` 只能用于节点，不能用于关系'
+        ],
+        answer: 2,
+        explanation: '笔记的意思很直接：易变属性不该参与“认身份”。如果把股权比例这类会变化的字段写进关系 `MERGE`，后续导入很容易被当成新关系，越导越乱。'
+      },
+      {
+        id: 12,
+        tag: '属性类型转换',
+        question: '进行属性类型转换前，笔记建议先做什么？',
+        options: [
+          '直接全表覆盖转换，省时间',
+          '先删掉原字段，再赌它能成功',
+          '先检查脏值，必要时先写到新字段验证',
+          '先导出成 Excel 再导回来'
+        ],
+        answer: 2,
+        explanation: '笔记建议非常稳：先检查空字符串、null、非法内容等脏值；更保险的做法是先转到新字段里验证，确认没问题再覆盖原字段。别一把梭把数据整成事故现场。'
       }
     ];
 
-    const quizRoot = document.getElementById('quiz');
+    const state = {
+      answered: new Map(),
+      wrongs: new Map()
+    };
+
+    const quizEl = document.getElementById('quiz');
+    const summaryText = document.getElementById('summaryText');
+    const exportWrongBtn = document.getElementById('exportWrongBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function updateSummary() {
+      const answeredCount = state.answered.size;
+      const wrongCount = state.wrongs.size;
+      if (!answeredCount) {
+        summaryText.textContent = '先把题点完。页面底部这个按钮，专门负责把你这次翻车的题打包带走。';
+        return;
+      }
+      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点“导出错题 Markdown”，就能把错题带走复盘。`;
+    }
+
+    function handleAnswer(card, q, selectedIndex) {
+      if (state.answered.has(q.id)) return;
+      state.answered.set(q.id, selectedIndex);
+
+      const buttons = [...card.querySelectorAll('.option-btn')];
+      const exp = card.querySelector('.explanation');
+      const isCorrect = selectedIndex === q.answer;
+
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === q.answer) {
+          btn.classList.add('correct');
+        } else if (idx === selectedIndex) {
+          btn.classList.add('wrong');
+        } else {
+          btn.classList.add('dimmed');
+        }
+      });
+
+      if (!isCorrect) {
+        state.wrongs.set(q.id, {
+          id: q.id,
+          tag: q.tag,
+          question: q.question,
+          selected: q.options[selectedIndex],
+          correct: q.options[q.answer],
+          explanation: q.explanation
+        });
+      }
+
+      exp.classList.add('show', isCorrect ? 'correct-mode' : 'wrong-mode');
+      exp.innerHTML = `
+        <div class="result-line">${isCorrect ? '答对了，继续冲。' : '这题翻车了，但问题不大。'}</div>
+        <div><strong>正确答案：</strong>${String.fromCharCode(65 + q.answer)}. ${escapeHtml(q.options[q.answer])}</div>
+        ${!isCorrect ? `<div><strong>你选择的是：</strong>${String.fromCharCode(65 + selectedIndex)}. ${escapeHtml(q.options[selectedIndex])}</div>` : ''}
+        <div style="margin-top:6px;"><strong>解析：</strong>${escapeHtml(q.explanation)}</div>
+      `;
+
+      updateSummary();
+    }
 
     function renderQuiz() {
+      quizEl.innerHTML = '';
       questions.forEach((q, index) => {
-        const article = document.createElement('article');
-        article.className = 'question-card';
-
-        const optionsHtml = q.options.map((option, optionIndex) => `
-          <button class="option-btn" data-question="${index}" data-option="${optionIndex}">
-            ${String.fromCharCode(65 + optionIndex)}. ${option}
-          </button>
-        `).join('');
-
-        article.innerHTML = `
+        const card = document.createElement('article');
+        card.className = 'question-card';
+        card.innerHTML = `
           <div class="question-top">
             <div class="q-index">${index + 1}</div>
-            <span class="tag">${q.type}</span>
+            <div class="tag">${escapeHtml(q.tag)}</div>
           </div>
-          <h2 class="question-title">${q.question}</h2>
-          <div class="options">${optionsHtml}</div>
-          <div class="explanation" id="exp-${index}"></div>
+          <h2 class="question-title">${escapeHtml(q.question)}</h2>
+          <div class="options"></div>
+          <div class="explanation"></div>
         `;
 
-        quizRoot.appendChild(article);
-      });
-    }
-
-    function bindEvents() {
-      quizRoot.addEventListener('click', (event) => {
-        const btn = event.target.closest('.option-btn');
-        if (!btn) return;
-
-        const qIndex = Number(btn.dataset.question);
-        const selected = Number(btn.dataset.option);
-        const question = questions[qIndex];
-        const card = btn.closest('.question-card');
-        const buttons = card.querySelectorAll('.option-btn');
-        const exp = card.querySelector('.explanation');
-        const correct = question.answer;
-        const isRight = selected === correct;
-
-        buttons.forEach((button, idx) => {
-          button.classList.remove('correct', 'wrong', 'dimmed');
-          if (idx === correct) {
-            button.classList.add('correct');
-          } else if (idx === selected && !isRight) {
-            button.classList.add('wrong');
-          } else {
-            button.classList.add('dimmed');
-          }
+        const optionsEl = card.querySelector('.options');
+        q.options.forEach((option, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.type = 'button';
+          btn.innerHTML = `<strong>${String.fromCharCode(65 + idx)}.</strong> ${escapeHtml(option)}`;
+          btn.addEventListener('click', () => handleAnswer(card, q, idx));
+          optionsEl.appendChild(btn);
         });
 
-        exp.className = `explanation show ${isRight ? 'correct-mode' : 'wrong-mode'}`;
-        exp.innerHTML = `
-          <div class="result-line">${isRight ? '✅ 回答正确' : '❌ 回答不对'} · 正确答案：${String.fromCharCode(65 + correct)}</div>
-          <div>${question.explanation}</div>
-          ${question.code ? `<div class="code"><code>${question.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></div>` : ''}
-        `;
+        quizEl.appendChild(card);
       });
+      updateSummary();
     }
 
+    function exportWrongAnswersMarkdown() {
+      const wrongItems = [...state.wrongs.values()];
+      if (!wrongItems.length) {
+        alert('当前还没有错题可导出。要么你太强了，要么还没开始做。');
+        return;
+      }
+
+      const now = new Date();
+      const ts = now.toLocaleString('zh-CN', { hour12: false });
+      const lines = [
+        '# 图数据库错题本',
+        '',
+        `- 来源：图数据库学习笔记-2026-03-26`,
+        `- 导出时间：${ts}`,
+        `- 错题数量：${wrongItems.length}`,
+        '',
+        '---',
+        ''
+      ];
+
+      wrongItems.forEach((item, idx) => {
+        lines.push(`## ${idx + 1}. ${item.question}`);
+        lines.push('');
+        lines.push(`- 知识点：${item.tag}`);
+        lines.push(`- 你选错的答案：${item.selected}`);
+        lines.push(`- 正确答案：${item.correct}`);
+        lines.push(`- 解析：${item.explanation}`);
+        lines.push('');
+      });
+
+      const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `图数据库错题本-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}.md`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetQuiz() {
+      state.answered.clear();
+      state.wrongs.clear();
+      renderQuiz();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    exportWrongBtn.addEventListener('click', exportWrongAnswersMarkdown);
+    resetBtn.addEventListener('click', resetQuiz);
+
     renderQuiz();
-    bindEvents();
   </script>
 </body>
 </html>
