@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python 选择题练习</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --ok: #15803d;
+      --ok-soft: #dcfce7;
+      --bad: #b91c1c;
+      --bad-soft: #fee2e2;
+      --border: #e5e7eb;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 240px);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      width: min(960px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+
+    .hero {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.65);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.15;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 18px 0 8px;
+    }
+
+    .meta-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 16px;
+    }
+
+    .meta-card strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 2px;
+    }
+
+    .quiz-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .question-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .q-index {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #111827;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .question-title {
+      margin: 0 0 14px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: .18s ease;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .option-btn:hover {
+      transform: translateY(-1px);
+      border-color: #bfdbfe;
+      background: #f8fbff;
+    }
+
+    .option-btn.correct {
+      border-color: #86efac;
+      background: var(--ok-soft);
+      color: #14532d;
+      font-weight: 700;
+    }
+
+    .option-btn.wrong {
+      border-color: #fca5a5;
+      background: var(--bad-soft);
+      color: #7f1d1d;
+      font-weight: 700;
+    }
+
+    .option-btn.dimmed {
+      opacity: .72;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 14px;
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+    }
+
+    .explanation.show { display: block; }
+    .explanation.correct-mode {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+    .explanation.wrong-mode {
+      border-color: #fecaca;
+      background: #fef2f2;
+    }
+
+    .result-line {
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background: #111827;
+      color: #e5e7eb;
+      border-radius: 12px;
+      padding: 12px 14px;
+      overflow-x: auto;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .footer {
+      margin-top: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(100% - 20px, 960px); padding-top: 18px; }
+      .hero, .question-card { padding: 18px; border-radius: 18px; }
+      .question-title { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="badge">静态网站 · index.html</div>
+      <h1>Python 选择题练习站</h1>
+      <p class="lead">题目整理自飞书里的《Python 学习笔记》。点击任意选项后，会立即在题目下方显示对错和解析，专治“看着会、写着翻车”。</p>
+      <div class="meta">
+        <div class="meta-card">
+          <strong>12</strong>
+          <span>道单选题</span>
+        </div>
+        <div class="meta-card">
+          <strong>4</strong>
+          <span>核心主题：循环 / 异常 / 字典 / 坑点</span>
+        </div>
+        <div class="meta-card">
+          <strong>即点即看</strong>
+          <span>答案与解析直接展开</span>
+        </div>
+      </div>
+    </section>
+
+    <main id="quiz" class="quiz-list"></main>
+
+    <p class="footer">做题建议：先凭感觉点，再看解析，别一上来就和答案谈恋爱。</p>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        type: "循环语句",
+        question: "`while` 循环最适合下面哪种场景？",
+        options: [
+          "已知循环次数，固定执行 3 次",
+          "条件成立就重复执行，直到条件不成立",
+          "只在列表中遍历元素时使用",
+          "只能搭配 `break` 才能运行"
+        ],
+        answer: 1,
+        explanation: "`while` 的典型场景就是‘条件成立就一直执行’。它不要求事先知道次数，更适合持续判断状态。"
+      },
+      {
+        type: "流程控制",
+        question: "下面关于 `break` 的说法，正确的是哪一项？",
+        options: [
+          "跳过本轮循环剩余代码，进入下一轮",
+          "立刻结束当前循环",
+          "结束整个 Python 程序",
+          "只有 `while` 循环能用，`for` 循环不能用"
+        ],
+        answer: 1,
+        explanation: "`break` 的作用是立刻跳出当前循环；跳过本轮而进入下一轮的是 `continue`。"
+      },
+      {
+        type: "流程控制",
+        question: "当 `for i in range(5)` 中 `i == 2` 时执行 `continue`，会发生什么？",
+        options: [
+          "循环立即结束",
+          "报错，因为 `continue` 不能写在 `for` 里",
+          "跳过本轮剩余代码，直接进入下一轮",
+          "重新从 `i == 0` 开始"
+        ],
+        answer: 2,
+        explanation: "`continue` 是‘这轮先别聊了，直接下一轮’。它不会终止整个循环，只会跳过当前轮的剩余语句。"
+      },
+      {
+        type: "异常处理",
+        question: "在 `try / except / else / finally` 结构中，`else` 会在什么时候执行？",
+        options: [
+          "只要写了就一定执行",
+          "发生异常时执行",
+          "没有发生异常时执行",
+          "在 `finally` 之后执行"
+        ],
+        answer: 2,
+        explanation: "`else` 只有在 `try` 里的代码没有抛出异常时才会执行。`finally` 则是不管有没有异常都执行。"
+      },
+      {
+        type: "异常处理",
+        question: "下面哪一项最符合 `finally` 的作用？",
+        options: [
+          "捕获指定异常",
+          "记录日志，但只有出错时运行",
+          "无论是否出错都会执行",
+          "替代 `except` 使用"
+        ],
+        answer: 2,
+        explanation: "`finally` 是兜底收尾位。比如关闭文件、释放资源、打印结束语，无论报错与否都能跑到这里。"
+      },
+      {
+        type: "字典方法",
+        question: "如果想同时拿到字典的键和值，最常用的方法是哪一个？",
+        options: [
+          "`info.keys()`",
+          "`info.values()`",
+          "`info.items()`",
+          "`info.get()`"
+        ],
+        answer: 2,
+        explanation: "`items()` 返回键值对视图，遍历时可以直接写成 `for key, value in info.items():`。"
+      },
+      {
+        type: "字典方法",
+        question: "下面哪段代码最适合遍历字典 `info` 的所有值？",
+        options: [
+          "`for value in info.values(): print(value)`",
+          "`for value in info.items(): print(value)`",
+          "`for value in info.keys(): print(value[1])`",
+          "`print(info.value())`"
+        ],
+        answer: 0,
+        explanation: "想要所有值，用 `values()` 最直接；`items()` 拿到的是键值对，`keys()` 拿到的是键。"
+      },
+      {
+        type: "易错点",
+        question: "为什么遍历列表时直接 `remove()` 可能删不干净？",
+        options: [
+          "因为 `remove()` 只能删除字符串",
+          "因为删除后列表索引变化，遍历节奏被打乱",
+          "因为 Python 不允许删除列表元素",
+          "因为 `for` 循环会自动复制一份列表"
+        ],
+        answer: 1,
+        explanation: "一边遍历一边删，元素会前移，索引节奏乱掉，所以有些元素会漏删。这就是经典的‘边走边拆地板’。"
+      },
+      {
+        type: "易错点",
+        question: "以下哪种方式更推荐用于删除列表中不满足条件的元素？",
+        options: [
+          "边遍历原列表边 `remove()`",
+          "列表推导式重新过滤生成列表",
+          "先把列表转成字符串再删",
+          "只要加个 `print()` 就没问题"
+        ],
+        answer: 1,
+        explanation: "列表推导式是最稳妥、最清爽的办法之一，例如：`my_list = [x for x in my_list if not condition(x)]`。",
+        code: "my_list = [x for x in my_list if not condition(x)]"
+      },
+      {
+        type: "字典视图",
+        question: "为什么 `items = info.items(); print(items[0])` 这类写法会报错？",
+        options: [
+          "因为字典里不能有两个键",
+          "因为 `items()` 返回的是视图对象，不是列表",
+          "因为 `print()` 不能打印字典",
+          "因为 `items()` 只能在函数里用"
+        ],
+        answer: 1,
+        explanation: "`dict.items()` 返回的是视图对象，不能像列表那样直接按索引取值。要么转成 `list(info.items())`，要么直接遍历。",
+        code: "list(info.items())[0]"
+      },
+      {
+        type: "审计工具开发",
+        question: "做审计小工具时，下列哪种场景最适合优先加异常处理？",
+        options: [
+          "用户输入、文件读取、数据转换",
+          "给变量起名字",
+          "给代码加空行",
+          "把注释写成三种颜色"
+        ],
+        answer: 0,
+        explanation: "笔记里特别提到：用户输入、文件读取、数据转换、接口请求这些地方最容易翻车，异常处理能显著提高容错性。"
+      },
+      {
+        type: "综合理解",
+        question: "下面哪一句最贴近这份笔记的核心提醒？",
+        options: [
+          "Python 难点主要在安装解释器",
+          "Python 只要会语法就不会出错",
+          "真正容易翻车的是那些‘看起来能跑，结果跑歪了’的细节",
+          "只要会 `while` 就能写审计系统"
+        ],
+        answer: 2,
+        explanation: "这份笔记的重点不是炫技，而是避坑：循环、异常、字典和列表修改这些细节，看着平平无奇，最容易让代码表面正常、结果跑偏。"
+      }
+    ];
+
+    const quizRoot = document.getElementById('quiz');
+
+    function renderQuiz() {
+      questions.forEach((q, index) => {
+        const article = document.createElement('article');
+        article.className = 'question-card';
+
+        const optionsHtml = q.options.map((option, optionIndex) => `
+          <button class="option-btn" data-question="${index}" data-option="${optionIndex}">
+            ${String.fromCharCode(65 + optionIndex)}. ${option}
+          </button>
+        `).join('');
+
+        article.innerHTML = `
+          <div class="question-top">
+            <div class="q-index">${index + 1}</div>
+            <span class="tag">${q.type}</span>
+          </div>
+          <h2 class="question-title">${q.question}</h2>
+          <div class="options">${optionsHtml}</div>
+          <div class="explanation" id="exp-${index}"></div>
+        `;
+
+        quizRoot.appendChild(article);
+      });
+    }
+
+    function bindEvents() {
+      quizRoot.addEventListener('click', (event) => {
+        const btn = event.target.closest('.option-btn');
+        if (!btn) return;
+
+        const qIndex = Number(btn.dataset.question);
+        const selected = Number(btn.dataset.option);
+        const question = questions[qIndex];
+        const card = btn.closest('.question-card');
+        const buttons = card.querySelectorAll('.option-btn');
+        const exp = card.querySelector('.explanation');
+        const correct = question.answer;
+        const isRight = selected === correct;
+
+        buttons.forEach((button, idx) => {
+          button.classList.remove('correct', 'wrong', 'dimmed');
+          if (idx === correct) {
+            button.classList.add('correct');
+          } else if (idx === selected && !isRight) {
+            button.classList.add('wrong');
+          } else {
+            button.classList.add('dimmed');
+          }
+        });
+
+        exp.className = `explanation show ${isRight ? 'correct-mode' : 'wrong-mode'}`;
+        exp.innerHTML = `
+          <div class="result-line">${isRight ? '✅ 回答正确' : '❌ 回答不对'} · 正确答案：${String.fromCharCode(65 + correct)}</div>
+          <div>${question.explanation}</div>
+          ${question.code ? `<div class="code"><code>${question.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></div>` : ''}
+        `;
+      });
+    }
+
+    renderQuiz();
+    bindEvents();
+  </script>
+</body>
+</html>
