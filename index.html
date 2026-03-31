@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>数据库与 Python 数字化审计练习</title>
+  <title>审计数据采集与神通数据库刷题页</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -269,16 +269,16 @@
   <div class="container">
     <section class="hero">
       <div class="badge">静态网站 · index.html</div>
-      <h1>数据库与 Python 数字化审计练习站</h1>
-      <p class="lead">题目整理自《第4周培训学习心得》。点击任意选项后，会直接在题目下方显示对错和解析，顺手还能把错题一键导出成 Markdown。</p>
+      <h1>审计数据采集与神通数据库刷题页</h1>
+      <p class="lead">题目整理自《审计数据采集与神通数据库学习笔记-2026-03-30》。点击任意选项后，会直接在题目下方显示对错和解析，底部还能一键导出错题 Markdown。</p>
       <div class="meta">
         <div class="meta-card">
-          <strong>15</strong>
+          <strong>10</strong>
           <span>道单选题</span>
         </div>
         <div class="meta-card">
-          <strong>7</strong>
-          <span>核心主题：数据库备份/权限 / 正则/文件操作 / openpyxl/NumPy/Pandas / 自动化处理链</span>
+          <strong>8</strong>
+          <span>核心主题：自连接去重 / 先聚合再 Join / 神通安装 / 时间类型 / SYS 与 SYSTEM / 控制文件 / OFFSET / 复合外键</span>
         </div>
         <div class="meta-card">
           <strong>一键导出</strong>
@@ -290,7 +290,7 @@
     <main id="quiz" class="quiz-list"></main>
 
     <section class="summary-panel">
-      <h2 style="margin:0 0 8px;">做完别急着跑</h2>
+      <h2 style="margin:0 0 8px;">先刷，再复盘</h2>
       <p id="summaryText" style="margin:0;color:var(--muted);">先把题点完。页面底部这个按钮，专门负责把你这次翻车的题打包带走。</p>
       <div class="summary-actions">
         <button id="exportWrongBtn" class="action-btn primary">导出错题 Markdown</button>
@@ -298,205 +298,140 @@
       </div>
     </section>
 
-    <p class="footer">复习建议：优先理解每个知识点背后的"审计应用场景"，而不仅仅是记语法。</p>
+    <p class="footer">复习建议：别只背结论，重点理解“为什么先聚合再 Join”“为什么自连接会重复”。这俩在审计数据分析里很容易踩坑。</p>
   </div>
 
   <script>
     const questions = [
       {
         id: 1,
-        tag: '最小权限原则',
-        question: '下列哪一项最能体现"最小权限原则"在审计中的应用？',
+        tag: '自连接去重',
+        question: '在自连接查找公司组合时，为避免 `(甲,乙)` 和 `(乙,甲)` 同时出现，最稳妥的做法是？',
         options: [
-          '给所有用户授予 PUBLIC 权限，方便统一访问',
-          '只授予完成当前工作必需的权限',
-          '给普通用户加上 WITH ADMIN OPTION，便于临时授权',
-          '让业务人员共享管理员账号，提高效率'
+          '直接在结果后面加一个 COUNT(*)',
+          '在连接条件中增加类似 `A.公司名称 > B.公司名称` 的限制',
+          '把两张表都改成视图再连接',
+          '把所有字段都转成字符串'
         ],
         answer: 1,
-        explanation: '最小权限原则要求只授予完成任务所需的最小权限集。 PUBLIC 全开、共享管理员、WITH ADMIN OPTION 都会增加越权风险，不符合审计内控要求。'
+        explanation: '这类重复本质上是同一无序组合被算了两次。给组合强行规定顺序，比如只保留 A 名称大于 B 名称的一侧，就能去掉镜像重复。'
       },
       {
         id: 2,
-        tag: '备份恢复',
-        question: '在审计视角下，下列关于数据库备份恢复的说法，最合适的是？',
+        tag: '聚合倍增',
+        question: '两张明细表发生 N 行匹配 M 行后，再直接 `GROUP BY` 聚合，最容易出现什么问题？',
         options: [
-          '只要做过一次备份，就不需要考虑归档',
-          '恢复机制是否健全，与审计无关，属于运维问题',
-          '备份策略、归档机制和恢复能力是信息系统审计的重要关注点',
-          '数据库只要能查询，就说明控制有效'
+          '聚合结果被缩小',
+          '聚合结果不受影响',
+          '聚合结果被重复放大',
+          'SQL 一定会报语法错'
         ],
         answer: 2,
-        explanation: '审计会重点检查：是否定期备份、归档是否开启、能否按时间点恢复、恢复演练是否到位。这些直接影响业务连续性和数据安全性。'
+        explanation: '连接结果会被放大，后续 SUM、COUNT、AVG 等统计都可能失真。这是审计分析里很典型的“先连后算翻车现场”。'
       },
       {
         id: 3,
-        tag: 'WITH 选项差异',
-        question: '关于 WITH GRANT OPTION 和 WITH ADMIN OPTION 的风险，下列哪项正确？',
+        tag: '处理策略',
+        question: '为了避免连接后的聚合值被重复放大，更推荐的处理思路是？',
         options: [
-          '两者完全相同，不存在差异',
-          '只有 WITH GRANT OPTION 会带来权限扩散风险',
-          '两者都可能导致权限扩散，需要审计关注',
-          'WITH ADMIN OPTION 只能由系统管理员使用，不会扩散'
+          '先 Join，再聚合',
+          '先聚合，再 Join',
+          '先排序，再 Join',
+          '先 LIMIT，再 Join'
         ],
-        answer: 2,
-        explanation: 'WITH GRANT OPTION 允许被授权者继续授权他人，WITH ADMIN OPTION 允许继续授予管理权限。两者都可能导致权限层层扩散，审计上要重点检查。'
+        answer: 1,
+        explanation: '先在原始数据层面完成汇总，再把聚合后的结果与其他表连接，通常能有效避免多对多或一对多匹配导致的统计倍增。'
       },
       {
         id: 4,
-        tag: '正则应用',
-        question: '下列哪个场景最适合使用正则表达式？',
+        tag: '神通安装',
+        question: '安装神通数据库时，服务器端最低资源要求是？',
         options: [
-          '处理批量命名的合同文件、从杂乱文本中提取关键字段',
-          '编写数据库存储过程',
-          '设计数据库表结构',
-          '直接做数学矩阵运算'
+          '硬盘至少 1G，内存至少 2G',
+          '硬盘至少 2G，内存至少 1G',
+          '硬盘至少 512M，内存至少 1G',
+          '硬盘至少 4G，内存至少 4G'
         ],
         answer: 0,
-        explanation: '正则表达式在审计中的典型用法：从制度文本、日志、合同目录、批量命名文件等半结构化资料中，快速提取关键字段、识别模式化异常。'
+        explanation: '这是一道典型记忆题：神通安装最低要求是硬盘空闲至少 1G、内存至少 2G。'
       },
       {
         id: 5,
-        tag: 'with open',
-        question: '关于 Python 文件操作的 with open(...) 写法，下列哪项更规范？',
+        tag: '时间类型',
+        question: '`date` 类型文本加上 `time` 类型文本之后，结果通常会变成什么类型？',
         options: [
-          'f = open("file.txt"); content = f.read(); f.close()',
-          'with open("file.txt") as f: content = f.read()',
-          'content = open("file.txt").read()',
-          'f = open("file.txt", encoding="utf-8");'
+          'date',
+          'time',
+          'timestamp',
+          'varchar'
         ],
-        answer: 1,
-        explanation: 'with open(...) 会在退出时自动关闭文件，避免忘记 close() 导致的资源泄漏，比手动 open/close 更安全、更推荐。'
+        answer: 2,
+        explanation: '笔记中的关键点是：date + time 会变成 timestamp。后面相关减法运算题就爱围着这个出。'
       },
       {
         id: 6,
-        tag: '工具定位',
-        question: '下列工具中，最贴近日常二维表格清洗、合并、去重场景的是？',
+        tag: '类型运算',
+        question: '关于 `timestamp` 的运算，下列说法正确的是？',
         options: [
-          'NumPy',
-          'Pandas',
-          'openpyxl',
-          '正则表达式'
+          '`timestamp` 可以减去 `time`，但不能减去 `date`',
+          '`timestamp` 既不能减去 `time`，也不能减去 `date`',
+          '`timestamp` 不能减去 `time`，但可以减去 `date`',
+          '`timestamp` 只能和字符串做减法'
         ],
-        answer: 1,
-        explanation: 'Pandas 专门用于二维表数据处理，去重、缺失值识别、多表合并、筛选分析等操作都比 openpyxl 和 NumPy 更贴近审计日常场景。'
+        answer: 2,
+        explanation: '这题最容易记混。正确结论是：timestamp 不能减去 time，但可以减去 date。'
       },
       {
         id: 7,
-        tag: 'openpyxl vs NumPy vs Pandas',
-        question: '关于 openpyxl、NumPy、Pandas 的理解，哪项更准确？',
+        tag: '系统模式',
+        question: '关于 Oracle 和神通中的系统模式，下列哪项正确？',
         options: [
-          'openpyxl 主要用于高性能矩阵计算',
-          'NumPy 更适合处理 Excel 格式样式与单元格结构',
-          'openpyxl 偏向 Excel 载体结构控制，NumPy 是数值计算引擎，Pandas 是二维表数据分析工具',
-          '三者用途完全相同，只是写法不同'
+          'Oracle 和神通都使用 SYS 模式存放相关系统对象',
+          'Oracle 用 SYSTEM，神通用 SYS',
+          'Oracle 用 SYS，神通用 SYSTEM',
+          '两者都使用 PUBLIC'
         ],
         answer: 2,
-        explanation: 'openpyxl 主要处理 Excel 载体（工作簿、工作表、单元格）；NumPy 是数值计算底层引擎；Pandas 是表格数据分析工具，更适合审计中的清洗、合并、筛选等。'
+        explanation: '这道题纯属“谁是谁”记忆题：Oracle 的数据库字典基本表和视图在 SYS，神通这里对应记成 SYSTEM。'
       },
       {
         id: 8,
-        tag: 'Pandas 操作',
-        question: '在 Pandas 中，下列哪项操作最适合处理"重复付款记录"和"缺失供应商信息"？',
+        tag: '启动顺序',
+        question: '关于参数文件与控制文件，下列哪项理解更准确？',
         options: [
-          '直接用 openpyxl 逐个单元格判断',
-          '用 NumPy 数组做矩阵运算',
-          '用 Pandas 的 drop_duplicates() 和 isnull() 等方法做去重和空值识别',
-          '用正则表达式逐行匹配'
+          '先读控制文件，再读参数文件启动实例',
+          '参数文件保存实例和数据库配置参数，通常先读参数文件，再读控制文件',
+          '控制文件只记录用户密码，参数文件只记录表结构',
+          '两者只在备份恢复时才有作用'
         ],
-        answer: 2,
-        explanation: 'Pandas 的 drop_duplicates() 可以快速去重，isnull()/fillna() 等方法可以识别和处理缺失值，非常适合批量清洗审计台账和底稿。'
+        answer: 1,
+        explanation: '参数文件主要保存实例和数据库配置参数，启动时先读取参数文件，再读取控制文件，这是你笔记里明确记下的顺序。'
       },
       {
         id: 9,
-        tag: '表合并',
-        question: '在 Pandas 中，合并两张 Excel 表（如付款台账 + 供应商主数据），最常用的是？',
+        tag: 'OFFSET',
+        question: '在神通数据库中，关于 `OFFSET` 的说法正确的是？',
         options: [
-          'merge()',
-          'concat()',
-          'join()',
-          'append()'
+          '必须和 `LIMIT` 同时使用',
+          '不一定要和 `LIMIT` 一起使用，也可以单独使用',
+          '只能出现在子查询里',
+          '只能用于删除语句'
         ],
-        answer: 0,
-        explanation: 'Pandas 的 merge() 支持按指定字段（如供应商编号）做类似 SQL JOIN 的合并，适合把台账和主数据关联起来做交叉验证。concat() 更多用于上下拼接。'
+        answer: 1,
+        explanation: '这点很容易按别的数据库习惯想当然。神通里 OFFSET 可以单独使用，不一定非要绑着 LIMIT。'
       },
       {
         id: 10,
-        tag: '文件模式',
-        question: '在 Python 中，处理文本日志文件和二进制日志文件，主要区别在于？',
+        tag: '复合外键',
+        question: '关于外键约束，下列哪项正确？',
         options: [
-          '两者完全一样，不需要区分',
-          '文本文件需要指定 encoding，二进制文件用 "b" 模式',
-          '文本文件用 open()，二进制文件用 with open()',
-          '二进制文件不能读取，只能写入'
-        ],
-        answer: 1,
-        explanation: '文本文件打开时通常需要指定编码（如 utf-8）；二进制文件需要加 "b" 模式（如 rb/wb）。审计日志可能有两种格式，需要区分处理。'
-      },
-      {
-        id: 11,
-        tag: '正则方法',
-        question: '下列哪个正则方法最适合从大段文本中找出"所有符合条件的子串"？',
-        options: [
-          'search()',
-          'match()',
-          'findall()',
-          'compile()'
+          '外键只能约束单列',
+          '外键只能关联主键，不能关联多列组合',
+          '外键既可以约束单列，也可以由多列共同组成，例如 `(a,b)` 对应 `(c,d)`',
+          '多列外键在数据库中不合法'
         ],
         answer: 2,
-        explanation: 'findall() 会返回所有匹配的子串列表，适合从大段文本批量提取关键字段或异常模式。search() 只返回第一个，match() 只从开头匹配。'
-      },
-      {
-        id: 12,
-        tag: '视图索引审计',
-        question: '视图、索引、存储过程等数据库对象，对审计的主要意义在于？',
-        options: [
-          '只和开发有关，与审计完全没关系',
-          '这些对象可以优化查询，但审计无需关注',
-          '理解这些对象有助于看清系统设计、性能瓶颈和潜在控制点',
-          '审计只要会查数据就行，不需要理解结构'
-        ],
-        answer: 2,
-        explanation: '视图更新限制、索引作用边界、存储过程权限分配等，都会影响数据可访问性、性能和安全控制。审计需要从这些对象层面理解系统控制是否健全。'
-      },
-      {
-        id: 13,
-        tag: 'PUBLIC 权限风险',
-        question: '如果某系统中大量对象权限通过 PUBLIC 开放，审计上你会优先联想到什么？',
-        options: [
-          '系统设计非常规范',
-          '所有用户都经过严格身份认证',
-          '越权访问、数据泄露、权限治理失控',
-          'PUBLIC 权限不会带来任何风险'
-        ],
-        answer: 2,
-        explanation: 'PUBLIC 全开意味着任何用户（包括匿名）都能访问这些对象，这通常违反最小权限原则，可能导致越权访问和数据泄露。审计上需要重点关注。'
-      },
-      {
-        id: 14,
-        tag: '字段类型选择',
-        question: '身份证号、公司编号、项目编号这类字段，更建议存成什么类型？',
-        options: [
-          '整数',
-          '浮点数',
-          '字符串',
-          '布尔值'
-        ],
-        answer: 2,
-        explanation: '这类编号可能很长、有前导零，用数字类型容易精度失真或把前导零吃掉，优先存成字符串更能保证数据完整性。'
-      },
-      {
-        id: 15,
-        tag: '自动化处理链',
-        question: '为什么说 Python 的文件操作、openpyxl 和 Pandas 不是孤立知识，而是一条可串起来的"自动化处理链"？',
-        options: [
-          '因为它们都是第三方库，需要同时安装',
-          '因为文件读取可以批量拿到资料，openpyxl/Pandas 可以处理成清洗结果，三者串起来能替代大量重复手工',
-          '因为它们都需要写 import 语句',
-          '因为它们都支持 with 写法'
-        ],
-        answer: 1,
-        explanation: '文件操作负责批量读取资料（合同、日志、台账），openpyxl 可以控制 Excel 结构，Pandas 可以做清洗、去重、合并。三者串起来，就能把大量重复性工作交给程序完成，审计人员专注分析。'
+        explanation: '外键不只是一列。复合外键完全合法，像 `(a,b)` 关联另一张表的 `(c,d)` 就是标准的多列约束场景。'
       }
     ];
 
@@ -526,7 +461,7 @@
         summaryText.textContent = '先把题点完。页面底部这个按钮，专门负责把你这次翻车的题打包带走。';
         return;
       }
-      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点"导出错题 Markdown"，就能把错题带走复盘。`;
+      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点“导出错题 Markdown”，就能把错题带走复盘。`;
     }
 
     function handleAnswer(card, q, selectedIndex) {
@@ -610,9 +545,9 @@
       const now = new Date();
       const ts = now.toLocaleString('zh-CN', { hour12: false });
       const lines = [
-        '# 数据库与 Python 数字化审计错题本',
+        '# 审计数据采集与神通数据库错题本',
         '',
-        `- 来源：第4周培训学习心得`,
+        '- 来源：审计数据采集与神通数据库学习笔记-2026-03-30',
         `- 导出时间：${ts}`,
         `- 错题数量：${wrongItems.length}`,
         '',
@@ -634,7 +569,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `数字化审计错题本-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}.md`;
+      a.download = `神通刷题错题本-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}.md`;
       document.body.appendChild(a);
       a.click();
       a.remove();
