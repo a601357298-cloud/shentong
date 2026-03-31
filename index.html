@@ -270,7 +270,7 @@
     <section class="hero">
       <div class="badge">静态网站 · index.html</div>
       <h1>审计数据采集与神通数据库刷题页</h1>
-      <p class="lead">题目整理自《审计数据采集与神通数据库学习笔记-2026-03-30》。点击任意选项后，会直接在题目下方显示对错和解析，底部还能一键导出错题 Markdown。</p>
+      <p class="lead">题目整理自《审计数据采集与神通数据库学习笔记-2026-03-30》。点击任意选项后，会直接在题目下方显示对错和解析。底部支持导出错题包（JSON + Markdown），方便后续沉淀到仓库的 wrong-answers 文件夹继续二次出题。</p>
       <div class="meta">
         <div class="meta-card">
           <strong>10</strong>
@@ -281,8 +281,8 @@
           <span>核心主题：自连接去重 / 先聚合再 Join / 神通安装 / 时间类型 / SYS 与 SYSTEM / 控制文件 / OFFSET / 复合外键</span>
         </div>
         <div class="meta-card">
-          <strong>一键导出</strong>
-          <span>做完题可导出错题 Markdown</span>
+          <strong>错题包导出</strong>
+          <span>做完题可导出 JSON + Markdown</span>
         </div>
       </div>
     </section>
@@ -293,7 +293,7 @@
       <h2 style="margin:0 0 8px;">先刷，再复盘</h2>
       <p id="summaryText" style="margin:0;color:var(--muted);">先把题点完。页面底部这个按钮，专门负责把你这次翻车的题打包带走。</p>
       <div class="summary-actions">
-        <button id="exportWrongBtn" class="action-btn primary">导出错题 Markdown</button>
+        <button id="exportWrongBtn" class="action-btn primary">导出错题包（JSON+Markdown）</button>
         <button id="resetBtn" class="action-btn secondary">重做一遍</button>
       </div>
     </section>
@@ -461,7 +461,7 @@
         summaryText.textContent = '先把题点完。页面底部这个按钮，专门负责把你这次翻车的题打包带走。';
         return;
       }
-      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点“导出错题 Markdown”，就能把错题带走复盘。`;
+      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点“导出错题包（JSON+Markdown）”，就能把错题带走复盘，并沉淀进 wrong-answers。`;
     }
 
     function handleAnswer(card, q, selectedIndex) {
@@ -535,7 +535,19 @@
       updateSummary();
     }
 
-    function exportWrongAnswersMarkdown() {
+    function downloadBlob(filename, content, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportWrongAnswersPackage() {
       const wrongItems = [...state.wrongs.values()];
       if (!wrongItems.length) {
         alert('当前还没有错题可导出。要么你太强了，要么还没开始做。');
@@ -543,13 +555,32 @@
       }
 
       const now = new Date();
+      const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+      const timePart = `${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
+      const stamp = `${datePart}-${timePart}`;
       const ts = now.toLocaleString('zh-CN', { hour12: false });
+
+      const jsonPayload = {
+        version: 1,
+        exportedAt: ts,
+        source: {
+          site: '审计数据采集与神通数据库刷题页',
+          note: '审计数据采集与神通数据库学习笔记-2026-03-30'
+        },
+        summary: {
+          wrongCount: wrongItems.length,
+          totalQuestions: questions.length
+        },
+        wrongs: wrongItems
+      };
+
       const lines = [
         '# 审计数据采集与神通数据库错题本',
         '',
         '- 来源：审计数据采集与神通数据库学习笔记-2026-03-30',
         `- 导出时间：${ts}`,
         `- 错题数量：${wrongItems.length}`,
+        `- 建议入库目录：wrong-answers/`,
         '',
         '---',
         ''
@@ -565,15 +596,16 @@
         lines.push('');
       });
 
-      const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `神通刷题错题本-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}.md`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      downloadBlob(
+        `wrong-answers-${stamp}.json`,
+        JSON.stringify(jsonPayload, null, 2),
+        'application/json;charset=utf-8'
+      );
+      downloadBlob(
+        `wrong-answers-${stamp}.md`,
+        lines.join('\n'),
+        'text/markdown;charset=utf-8'
+      );
     }
 
     function resetQuiz() {
@@ -583,7 +615,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    exportWrongBtn.addEventListener('click', exportWrongAnswersMarkdown);
+    exportWrongBtn.addEventListener('click', exportWrongAnswersPackage);
     resetBtn.addEventListener('click', resetQuiz);
 
     renderQuiz();
