@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>审计数据采集与神通数据库刷题页</title>
+  <title>图数据库刷题页</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -30,15 +30,15 @@
     }
 
     .container {
-      width: min(960px, calc(100% - 32px));
+      width: min(980px, calc(100% - 32px));
       margin: 0 auto;
       padding: 32px 0 48px;
     }
 
     .hero {
-      background: rgba(255,255,255,0.82);
+      background: rgba(255,255,255,0.84);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.7);
       border-radius: 24px;
       padding: 28px;
       box-shadow: var(--shadow);
@@ -175,9 +175,7 @@
       font-weight: 700;
     }
 
-    .option-btn.dimmed {
-      opacity: .72;
-    }
+    .option-btn.dimmed { opacity: .72; }
 
     .explanation {
       display: none;
@@ -245,9 +243,7 @@
       border: 1px solid #c7d2fe;
     }
 
-    .action-btn.secondary:hover {
-      background: #e0e7ff;
-    }
+    .action-btn.secondary:hover { background: #e0e7ff; }
 
     .footer {
       margin-top: 28px;
@@ -257,7 +253,7 @@
     }
 
     @media (max-width: 640px) {
-      .container { width: min(100% - 20px, 960px); padding-top: 18px; }
+      .container { width: min(100% - 20px, 980px); padding-top: 18px; }
       .hero, .question-card, .summary-panel { padding: 18px; border-radius: 18px; }
       .question-title { font-size: 18px; }
       .summary-actions { flex-direction: column; }
@@ -269,20 +265,20 @@
   <div class="container">
     <section class="hero">
       <div class="badge">静态网站 · index.html</div>
-      <h1>审计数据采集与神通数据库刷题页</h1>
-      <p class="lead">题目整理自《审计数据采集与神通数据库学习笔记-2026-03-30》。点击任意选项后，会直接在题目下方显示对错和解析。底部支持导出错题包（JSON + Markdown），方便后续沉淀到仓库的 wrong-answers 文件夹继续二次出题。</p>
+      <h1>图数据库刷题页</h1>
+      <p class="lead">题目整理自 3 篇飞书图数据库笔记：基础认知、Cypher 易错点、路径查询、建模原则、CSV 导入、最短路径、字符串处理与类型转换。点击任意选项后，会直接在题目下方显示对错和解析；底部支持导出错题 Markdown。</p>
       <div class="meta">
         <div class="meta-card">
-          <strong>10</strong>
+          <strong>20</strong>
           <span>道单选题</span>
         </div>
         <div class="meta-card">
-          <strong>8</strong>
-          <span>核心主题：自连接去重 / 先聚合再 Join / 神通安装 / 时间类型 / SYS 与 SYSTEM / 控制文件 / OFFSET / 复合外键</span>
+          <strong>3</strong>
+          <span>来源文档：图数据库学习笔记 / 2026-03-24 / 2026-03-26</span>
         </div>
         <div class="meta-card">
-          <strong>错题包导出</strong>
-          <span>做完题可导出 JSON + Markdown</span>
+          <strong>错题导出</strong>
+          <span>支持导出 Markdown，方便继续复盘</span>
         </div>
       </div>
     </section>
@@ -291,147 +287,262 @@
 
     <section class="summary-panel">
       <h2 style="margin:0 0 8px;">先刷，再复盘</h2>
-      <p id="summaryText" style="margin:0;color:var(--muted);">先把题点完。页面底部这个按钮，专门负责把你这次翻车的题打包带走。</p>
+      <p id="summaryText" style="margin:0;color:var(--muted);">先把题点完。底部按钮会把你这次做错的题导出成 Markdown，方便继续回炉重造。</p>
       <div class="summary-actions">
-        <button id="exportWrongBtn" class="action-btn primary">导出错题包（JSON+Markdown）</button>
+        <button id="exportWrongBtn" class="action-btn primary">导出错题 Markdown</button>
         <button id="resetBtn" class="action-btn secondary">重做一遍</button>
       </div>
     </section>
 
-    <p class="footer">复习建议：别只背结论，重点理解“为什么先聚合再 Join”“为什么自连接会重复”。这俩在审计数据分析里很容易踩坑。</p>
+    <p class="footer">复习建议：别只背答案，重点理解为什么要先聚合再连接、为什么 MERGE 只认身份字段、为什么 [] 和 [*] 不是一回事。</p>
   </div>
 
   <script>
     const questions = [
       {
         id: 1,
-        tag: '自连接去重',
-        question: '在自连接查找公司组合时，为避免 `(甲,乙)` 和 `(乙,甲)` 同时出现，最稳妥的做法是？',
+        tag: '基础认知',
+        question: '图数据库和传统关系型数据库相比，最突出的特点是什么？',
         options: [
-          '直接在结果后面加一个 COUNT(*)',
-          '在连接条件中增加类似 `A.公司名称 > B.公司名称` 的限制',
-          '把两张表都改成视图再连接',
-          '把所有字段都转成字符串'
+          '更强调实体之间的关系',
+          '只能存储字符串类型数据',
+          '完全不支持条件过滤',
+          '所有查询都必须写存储过程'
         ],
-        answer: 1,
-        explanation: '这类重复本质上是同一无序组合被算了两次。给组合强行规定顺序，比如只保留 A 名称大于 B 名称的一侧，就能去掉镜像重复。'
+        answer: 0,
+        explanation: '图数据库的核心不是“表有多整齐”，而是“关系网有多清楚”。它特别适合分析网络结构、上下游关系和关联路径。'
       },
       {
         id: 2,
-        tag: '聚合倍增',
-        question: '两张明细表发生 N 行匹配 M 行后，再直接 `GROUP BY` 聚合，最容易出现什么问题？',
-        options: [
-          '聚合结果被缩小',
-          '聚合结果不受影响',
-          '聚合结果被重复放大',
-          'SQL 一定会报语法错'
-        ],
-        answer: 2,
-        explanation: '连接结果会被放大，后续 SUM、COUNT、AVG 等统计都可能失真。这是审计分析里很典型的“先连后算翻车现场”。'
+        tag: '语法元素',
+        question: '在 Cypher 中，节点使用什么符号表示？',
+        options: ['[]', '()', '{}', '<>'],
+        answer: 1,
+        explanation: '小括号 () 表示节点，中括号 [] 表示关系，大括号 {} 表示属性。别三兄弟认错人。'
       },
       {
         id: 3,
-        tag: '处理策略',
-        question: '为了避免连接后的聚合值被重复放大，更推荐的处理思路是？',
+        tag: '关系方向',
+        question: '下面哪种写法正确表达了有方向的关系？',
         options: [
-          '先 Join，再聚合',
-          '先聚合，再 Join',
-          '先排序，再 Join',
-          '先 LIMIT，再 Join'
+          '(p)<KNOWS>(f)',
+          '(p)-[:KNOWS]->(f)',
+          '(p){:KNOWS}(f)',
+          '(p)->[KNOWS](f)'
         ],
         answer: 1,
-        explanation: '先在原始数据层面完成汇总，再把聚合后的结果与其他表连接，通常能有效避免多对多或一对多匹配导致的统计倍增。'
+        explanation: '关系写在中括号里，方向靠箭头表达。箭头不是装饰，是语义。'
       },
       {
         id: 4,
-        tag: '神通安装',
-        question: '安装神通数据库时，服务器端最低资源要求是？',
+        tag: 'CREATE vs MERGE',
+        question: '关于 CREATE 和 MERGE，下列说法正确的是？',
         options: [
-          '硬盘至少 1G，内存至少 2G',
-          '硬盘至少 2G，内存至少 1G',
-          '硬盘至少 512M，内存至少 1G',
-          '硬盘至少 4G，内存至少 4G'
+          'CREATE 会先查重，MERGE 永远新建',
+          'CREATE 和 MERGE 没区别',
+          'CREATE 永远新建，MERGE 先找没有才建',
+          'MERGE 只能用于关系，不能用于节点'
         ],
-        answer: 0,
-        explanation: '这是一道典型记忆题：神通安装最低要求是硬盘空闲至少 1G、内存至少 2G。'
+        answer: 2,
+        explanation: 'CREATE 是直接建，重复执行会重复创建；MERGE 是先找，没有才建。导入数据时这俩分工很关键。'
       },
       {
         id: 5,
-        tag: '时间类型',
-        question: '`date` 类型文本加上 `time` 类型文本之后，结果通常会变成什么类型？',
+        tag: '更新语法',
+        question: '更新节点属性时，正确的语句顺序是？',
         options: [
-          'date',
-          'time',
-          'timestamp',
-          'varchar'
+          'MATCH ... SET ... WHERE ...',
+          'MATCH ... WHERE ... SET ...',
+          'SET ... WHERE ... MATCH ...',
+          'WHERE ... MATCH ... SET ...'
         ],
-        answer: 2,
-        explanation: '笔记中的关键点是：date + time 会变成 timestamp。后面相关减法运算题就爱围着这个出。'
+        answer: 1,
+        explanation: 'WHERE 要写在 SET 前面。这个顺序写反，是课堂常见翻车点。'
       },
       {
         id: 6,
-        tag: '类型运算',
-        question: '关于 `timestamp` 的运算，下列说法正确的是？',
+        tag: '属性删除',
+        question: '在 Neo4j 中，如果想删除某个属性，常见做法是？',
         options: [
-          '`timestamp` 可以减去 `time`，但不能减去 `date`',
-          '`timestamp` 既不能减去 `time`，也不能减去 `date`',
-          '`timestamp` 不能减去 `time`，但可以减去 `date`',
-          '`timestamp` 只能和字符串做减法'
+          'DELETE p.age',
+          'SET p.age = null',
+          'DROP p.age',
+          'TRUNCATE p.age'
         ],
-        answer: 2,
-        explanation: '这题最容易记混。正确结论是：timestamp 不能减去 time，但可以减去 date。'
+        answer: 1,
+        explanation: '把属性设成 null，等价于删除该属性。这点和很多 SQL 直觉不一样。'
       },
       {
         id: 7,
-        tag: '系统模式',
-        question: '关于 Oracle 和神通中的系统模式，下列哪项正确？',
+        tag: 'EXISTS',
+        question: '关于 EXISTS 的使用，下列哪项正确？',
         options: [
-          'Oracle 和神通都使用 SYS 模式存放相关系统对象',
-          'Oracle 用 SYSTEM，神通用 SYS',
-          'Oracle 用 SYS，神通用 SYSTEM',
-          '两者都使用 PUBLIC'
+          'EXISTS() 里面必须再嵌套 MATCH',
+          'EXISTS(n.name) 可用于判断属性是否存在',
+          'EXISTS 只能用于路径变量',
+          'EXISTS 只能放在 RETURN 里'
         ],
-        answer: 2,
-        explanation: '这道题纯属“谁是谁”记忆题：Oracle 的数据库字典基本表和视图在 SYS，神通这里对应记成 SYSTEM。'
+        answer: 1,
+        explanation: 'EXISTS() 常直接写属性或条件，不需要下意识再套一层 MATCH。'
       },
       {
         id: 8,
-        tag: '启动顺序',
-        question: '关于参数文件与控制文件，下列哪项理解更准确？',
-        options: [
-          '先读控制文件，再读参数文件启动实例',
-          '参数文件保存实例和数据库配置参数，通常先读参数文件，再读控制文件',
-          '控制文件只记录用户密码，参数文件只记录表结构',
-          '两者只在备份恢复时才有作用'
-        ],
-        answer: 1,
-        explanation: '参数文件主要保存实例和数据库配置参数，启动时先读取参数文件，再读取控制文件，这是你笔记里明确记下的顺序。'
+        tag: '标签判断',
+        question: '判断节点 n 是否属于“人员”标签，正确写法是？',
+        options: ['n = 人员', 'n.type = 人员', 'n:人员', 'n -> 人员'],
+        answer: 2,
+        explanation: '标签判断用冒号 :，不是等号 =。这题属于“看着像小问题，其实最容易写错”。'
       },
       {
         id: 9,
-        tag: 'OFFSET',
-        question: '在神通数据库中，关于 `OFFSET` 的说法正确的是？',
-        options: [
-          '必须和 `LIMIT` 同时使用',
-          '不一定要和 `LIMIT` 一起使用，也可以单独使用',
-          '只能出现在子查询里',
-          '只能用于删除语句'
-        ],
-        answer: 1,
-        explanation: '这点很容易按别的数据库习惯想当然。神通里 OFFSET 可以单独使用，不一定非要绑着 LIMIT。'
+        tag: '路径函数',
+        question: '如果想取出路径 p 上的所有节点，应该用哪个函数？',
+        options: ['nodes(p)', 'relationships(p)', 'labels(p)', 'keys(p)'],
+        answer: 0,
+        explanation: 'nodes(p) 返回路径上的节点集合；relationships(p) 返回路径上的关系集合。别张冠李戴。'
       },
       {
         id: 10,
-        tag: '复合外键',
-        question: '关于外键约束，下列哪项正确？',
+        tag: 'all / any',
+        question: '关于 all(...) 和 any(...)，下列说法正确的是？',
         options: [
-          '外键只能约束单列',
-          '外键只能关联主键，不能关联多列组合',
-          '外键既可以约束单列，也可以由多列共同组成，例如 `(a,b)` 对应 `(c,d)`',
-          '多列外键在数据库中不合法'
+          'all 表示任意一个满足，any 表示全部满足',
+          'all 和 any 完全等价',
+          'all 表示全部满足，any 表示任意一个满足',
+          '它们只能用于数值计算，不能用于路径节点过滤'
         ],
         answer: 2,
-        explanation: '外键不只是一列。复合外键完全合法，像 `(a,b)` 关联另一张表的 `(c,d)` 就是标准的多列约束场景。'
+        explanation: 'all 是“全都得过关”，any 是“有一个过关就行”。路径中过滤中间节点时很常用。'
+      },
+      {
+        id: 11,
+        tag: '最短路径',
+        question: 'shortestPath() 和 allShortestPaths() 的区别是？',
+        options: [
+          '前者返回一条最短路径，后者返回所有同长最短路径',
+          '前者返回所有路径，后者返回一条路径',
+          '两者只在 SQL 中有区别，Cypher 中相同',
+          '前者只能查关系，后者只能查节点'
+        ],
+        answer: 0,
+        explanation: 'shortestPath() 找一条最短路径，allShortestPaths() 找所有同样短的最短路径。'
+      },
+      {
+        id: 12,
+        tag: '跳数',
+        question: '在路径模式里，[] 和 [*] 分别表示什么？',
+        options: [
+          '[] 多跳，[*] 一跳',
+          '[] 一跳，[*] 多跳',
+          '两者都只表示一跳',
+          '两者都表示任意多跳'
+        ],
+        answer: 1,
+        explanation: '[] 是一跳，[*] 才是多跳。这个看起来小，做路径题时错一下就整题都偏了。'
+      },
+      {
+        id: 13,
+        tag: 'UNION',
+        question: '关于 UNION 的注意事项，下列哪项正确？',
+        options: [
+          '前后返回结构可以随便不同',
+          '只要列数一样，列名和类型都无所谓',
+          '前后结果最好保持列数、列名、类型一致',
+          'UNION 只能拼接 DELETE 语句'
+        ],
+        answer: 2,
+        explanation: 'UNION 不是乱拼。返回结构要对齐，列数、列名、类型最好都一致。'
+      },
+      {
+        id: 14,
+        tag: '模糊查询',
+        question: '如果要查询姓名中包含“张”的节点，最适合用哪个条件？',
+        options: [
+          'WHERE n.name LIKE 张',
+          'WHERE n.name CONTAINS \'张\'',
+          'WHERE n.name IN \'张\'',
+          'WHERE n.name == \'张\''
+        ],
+        answer: 1,
+        explanation: '包含用 CONTAINS，开头用 STARTS WITH，结尾用 ENDS WITH。Cypher 这套和 SQL 有点像，但不是原封不动。'
+      },
+      {
+        id: 15,
+        tag: 'substring',
+        question: '关于 substring()，下列说法正确的是？',
+        options: [
+          '下标从 1 开始',
+          '下标从 0 开始',
+          '只能截取数字字段',
+          '不能用于 WHERE 条件判断'
+        ],
+        answer: 1,
+        explanation: 'substring() 的下标从 0 开始。这个坑和很多语言一致，背错就会整段偏移。'
+      },
+      {
+        id: 16,
+        tag: '编号字段',
+        question: '身份证号、公司编号、项目编号这类字段，为什么更推荐存成字符串？',
+        options: [
+          '因为字符串查询更慢',
+          '因为它们不能比较大小',
+          '因为可能很长、带前导零，数字类型可能失真',
+          '因为图数据库不支持数字类型'
+        ],
+        answer: 2,
+        explanation: '编号类字段经常有前导零，也可能位数很长。存成数字，轻则丢零，重则精度翻车。'
+      },
+      {
+        id: 17,
+        tag: '建模原则',
+        question: '图数据库建模中的“核心三分法”是？',
+        options: [
+          '实体做属性，联系做节点，描述做关系',
+          '实体做节点，联系做关系，描述做属性',
+          '实体做关系，联系做属性，描述做节点',
+          '实体、联系、描述全部做节点'
+        ],
+        answer: 1,
+        explanation: '这就是建模的主干：实体做节点，联系做关系，描述做属性。顺序别串戏。'
+      },
+      {
+        id: 18,
+        tag: '核心对象抽节点',
+        question: '在审批场景里，为什么更推荐“审批部门 -> 项目 <- 公司”，而不是直接“审批部门 -> 公司”？',
+        options: [
+          '因为项目才是中间核心对象',
+          '因为公司不能当节点',
+          '因为审批部门不能建关系',
+          '因为项目编号必须做数组'
+        ],
+        answer: 0,
+        explanation: '如果两个实体之间的联系是通过第三个核心对象发生的，就应优先把这个核心对象抽成节点。审批场景里，“项目”才是核心事件。'
+      },
+      {
+        id: 19,
+        tag: 'CSV 导入',
+        question: '关于 CSV 导入，下面哪项更稳妥？',
+        options: [
+          'CSV 编码无所谓，只要扩展名对',
+          '允许有空行，数据库会自动忽略所有问题',
+          '导入时应确保 UTF-8 编码且尽量不要有空行',
+          '导入前不需要检查表头'
+        ],
+        answer: 2,
+        explanation: 'CSV 导入最基础的两个点：UTF-8 编码、别有空行。不然很容易乱码、错位、读取异常。'
+      },
+      {
+        id: 20,
+        tag: 'MERGE + SET / 类型转换',
+        question: '下面哪种写法最符合“MERGE 认身份，SET 补描述”的稳妥原则？',
+        options: [
+          'MERGE (a:公司 {公司编号: row.公司编号, 公司名称: row.公司名称, 建筑资质: row.建筑资质})',
+          'MERGE (a:公司 {公司编号: row.公司编号}) SET a.公司名称 = row.公司名称, a.建筑资质 = row.建筑资质',
+          'CREATE (a:公司 {公司编号: row.公司编号}) 再重复执行多次',
+          '先把所有属性都转成整数，再决定怎么导入'
+        ],
+        answer: 1,
+        explanation: '唯一标识放进 MERGE，其他描述字段交给 SET。这样后续补数据、重复导入、字段更新时更稳，也更不容易误造新节点。'
       }
     ];
 
@@ -458,10 +569,10 @@
       const answeredCount = state.answered.size;
       const wrongCount = state.wrongs.size;
       if (!answeredCount) {
-        summaryText.textContent = '先把题点完。页面底部这个按钮，专门负责把你这次翻车的题打包带走。';
+        summaryText.textContent = '先把题点完。底部按钮会把你这次做错的题导出成 Markdown，方便继续回炉重造。';
         return;
       }
-      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点“导出错题包（JSON+Markdown）”，就能把错题带走复盘，并沉淀进 wrong-answers。`;
+      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点“导出错题 Markdown”，就能把错题带走复盘。`;
     }
 
     function handleAnswer(card, q, selectedIndex) {
@@ -474,13 +585,9 @@
 
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
-        if (idx === q.answer) {
-          btn.classList.add('correct');
-        } else if (idx === selectedIndex) {
-          btn.classList.add('wrong');
-        } else {
-          btn.classList.add('dimmed');
-        }
+        if (idx === q.answer) btn.classList.add('correct');
+        else if (idx === selectedIndex) btn.classList.add('wrong');
+        else btn.classList.add('dimmed');
       });
 
       if (!isCorrect) {
@@ -547,7 +654,7 @@
       URL.revokeObjectURL(url);
     }
 
-    function exportWrongAnswersPackage() {
+    function exportWrongAnswersMarkdown() {
       const wrongItems = [...state.wrongs.values()];
       if (!wrongItems.length) {
         alert('当前还没有错题可导出。要么你太强了，要么还没开始做。');
@@ -555,32 +662,15 @@
       }
 
       const now = new Date();
-      const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-      const timePart = `${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
-      const stamp = `${datePart}-${timePart}`;
       const ts = now.toLocaleString('zh-CN', { hour12: false });
-
-      const jsonPayload = {
-        version: 1,
-        exportedAt: ts,
-        source: {
-          site: '审计数据采集与神通数据库刷题页',
-          note: '审计数据采集与神通数据库学习笔记-2026-03-30'
-        },
-        summary: {
-          wrongCount: wrongItems.length,
-          totalQuestions: questions.length
-        },
-        wrongs: wrongItems
-      };
+      const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
 
       const lines = [
-        '# 审计数据采集与神通数据库错题本',
+        '# 图数据库错题本',
         '',
-        '- 来源：审计数据采集与神通数据库学习笔记-2026-03-30',
+        '- 来源：图数据库学习笔记 / 图数据库学习笔记-2026-03-24 / 图数据库学习笔记-2026-03-26',
         `- 导出时间：${ts}`,
         `- 错题数量：${wrongItems.length}`,
-        `- 建议入库目录：wrong-answers/`,
         '',
         '---',
         ''
@@ -596,16 +686,7 @@
         lines.push('');
       });
 
-      downloadBlob(
-        `wrong-answers-${stamp}.json`,
-        JSON.stringify(jsonPayload, null, 2),
-        'application/json;charset=utf-8'
-      );
-      downloadBlob(
-        `wrong-answers-${stamp}.md`,
-        lines.join('\n'),
-        'text/markdown;charset=utf-8'
-      );
+      downloadBlob(`graph-quiz-wrong-answers-${stamp}.md`, lines.join('\n'), 'text/markdown;charset=utf-8');
     }
 
     function resetQuiz() {
@@ -615,7 +696,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    exportWrongBtn.addEventListener('click', exportWrongAnswersPackage);
+    exportWrongBtn.addEventListener('click', exportWrongAnswersMarkdown);
     resetBtn.addEventListener('click', resetQuiz);
 
     renderQuiz();
