@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>国产数据库刷题页</title>
+  <title>国产数据库高阶刷题页</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -264,21 +264,21 @@
 <body>
   <div class="container">
     <section class="hero">
-      <div class="badge">静态网站 · index.html</div>
-      <h1>国产数据库刷题页</h1>
-      <p class="lead">这版先按你要的 20 题标准版来，覆盖国产数据库通识、关系模型、SQL 基础、主键外键、事务、索引、备份、安全控制这些高频考点。点任意选项后，会直接显示对错和解析；底部支持导出错题 Markdown。</p>
+      <div class="badge">静态网站 · 高阶版 · index.html</div>
+      <h1>国产数据库高阶刷题页</h1>
+      <p class="lead">这版直接基于你飞书里的 3 篇国产数据库/神通数据库笔记重做，难度比上一版高：弱化纯概念送分题，强化备份恢复、权限传递、视图更新限制、窗口函数、神通语法差异和审计场景易错点。点击任意选项后，会直接显示对错和解析；底部支持导出错题 Markdown。</p>
       <div class="meta">
         <div class="meta-card">
           <strong>20</strong>
-          <span>道单选题</span>
+          <span>道高阶单选题</span>
         </div>
         <div class="meta-card">
-          <strong>国产数据库</strong>
-          <span>通识 + 基础 SQL + 数据库核心概念</span>
+          <strong>3</strong>
+          <span>来源笔记：2026-03-17 / 2026-03-20 / 神通数据库学习笔记</span>
         </div>
         <div class="meta-card">
-          <strong>错题导出</strong>
-          <span>支持导出 Markdown，方便继续复盘</span>
+          <strong>难度提升</strong>
+          <span>更偏易错点、语法差异、实战理解</span>
         </div>
       </div>
     </section>
@@ -287,177 +287,177 @@
 
     <section class="summary-panel">
       <h2 style="margin:0 0 8px;">先刷，再复盘</h2>
-      <p id="summaryText" style="margin:0;color:var(--muted);">先把题点完。底部按钮会把你这次做错的题导出成 Markdown，方便继续回炉重造。</p>
+      <p id="summaryText" style="margin:0;color:var(--muted);">这版更像考试里的“拐弯题”。先做，错了再看解析，记得把错题导出去慢慢收拾。</p>
       <div class="summary-actions">
         <button id="exportWrongBtn" class="action-btn primary">导出错题 Markdown</button>
         <button id="resetBtn" class="action-btn secondary">重做一遍</button>
       </div>
     </section>
 
-    <p class="footer">复习建议：别只背 A/B/C/D，重点搞懂主键、外键、事务、索引、备份这些概念，不然选择题做得像开盲盒。</p>
+    <p class="footer">友情提示：这一版最容易翻车的，不是不会，而是“按别的数据库手感乱写”。</p>
   </div>
 
   <script>
     const questions = [
       {
         id: 1,
-        tag: '国产数据库通识',
-        question: '下列哪一项不属于常见的国产数据库产品？',
-        options: ['神通数据库', '达梦数据库', 'OceanBase', 'MongoDB'],
-        answer: 3,
-        explanation: '神通、达梦、OceanBase 都是常见国产数据库产品；MongoDB 是国外的文档型数据库。'
+        tag: '备份恢复',
+        question: '某数据库运行在未归档模式，且管理员手里只有外部备份文件。根据你的笔记，下列哪项恢复方式仍然可能实现？',
+        options: ['时间点恢复', '完全恢复', '备份点恢复', '逻辑回滚恢复'],
+        answer: 2,
+        explanation: '未归档模式下，核心限制就是不能做时间点恢复；课堂笔记强调，即使是外部备份，通常也只能做备份点恢复。'
       },
       {
         id: 2,
-        tag: '数据库基础',
-        question: '数据库管理系统中，负责对数据进行统一管理和控制的软件称为：',
-        options: ['操作系统', '数据库管理系统', '编译程序', 'Office 软件'],
+        tag: '备份恢复',
+        question: '关于增量备份与差异备份的基准点，下列说法正确的是：',
+        options: ['两者都以上一次完全备份为基准', '增量以上一次备份为基准，差异以上一次完全备份为基准', '增量以上一次完全备份为基准，差异以上一次备份为基准', '两者都以上一次任意成功恢复为基准'],
         answer: 1,
-        explanation: '题干其实已经把答案递到你手边了，负责数据统一管理和控制的就是 DBMS。'
+        explanation: '这题是高频坑：增量看“上一次备份”，差异看“上一次完全备份”。一旦基准点记反，恢复链路也会跟着乱。'
       },
       {
         id: 3,
-        tag: '数据库目标',
-        question: '数据库系统的核心目标之一是：',
-        options: ['只用于存图片', '实现数据的共享、管理与控制', '替代所有应用软件', '只支持单用户访问'],
+        tag: '恢复前提',
+        question: '进行物理恢复前，最关键的前置条件是：',
+        options: ['必须先导出逻辑备份', '必须先停止数据库运行', '必须先删除所有用户', '必须先创建新模式'],
         answer: 1,
-        explanation: '数据库不是仓库摆件，它的核心价值在于高效存储、共享、管理和控制数据。'
+        explanation: '你的笔记写得很死：物理恢复前必须停库。这个不是建议，是前提。'
       },
       {
         id: 4,
-        tag: '关系模型',
-        question: '在关系数据库中，表中的一行通常称为：',
-        options: ['字段', '记录', '模式', '视图'],
+        tag: '权限管理',
+        question: '某用户被授予对象权限时附带 WITH GRANT OPTION。之后管理员收回了该用户的这项对象权限，那么该用户此前继续授给下游用户的同类对象权限通常会怎样？',
+        options: ['继续永久保留', '自动一并失效', '转为系统权限', '只保留查询权限'],
         answer: 1,
-        explanation: '一行是一条记录，一列是一个字段。这个属于数据库入门必考送分题。'
+        explanation: '对象权限和系统权限这里要分清。对象权限经 WITH GRANT OPTION 继续分发后，如果上级权限被收回，下级相关对象权限也会一起失效。'
       },
       {
         id: 5,
-        tag: '关系模型',
-        question: '在关系数据库中，表中的一列通常称为：',
-        options: ['元组', '记录', '字段', '索引'],
-        answer: 2,
-        explanation: '列对应字段，行对应记录。别把“元组”这类术语和日常表述搞串了。'
+        tag: '权限管理',
+        question: '某管理员把 SELECT ANY TABLE 授给用户 A，并附带 WITH ADMIN OPTION。后来该管理员收回了 A 的该系统权限。根据笔记，下列哪项最符合系统权限传递的特点？',
+        options: ['A 继续分发出去的系统权限一定自动全部回收', 'A 继续分发出去的系统权限不一定自动回收', 'WITH ADMIN OPTION 只能用于对象权限', 'SELECT ANY TABLE 属于对象权限'],
+        answer: 1,
+        explanation: '系统权限 + WITH ADMIN OPTION 是另一套逻辑。你的笔记专门强调：即便上级被收回，下级已继续授出的系统权限不一定自动回收。'
       },
       {
         id: 6,
-        tag: '键约束',
-        question: '用来唯一标识表中一条记录的键称为：',
-        options: ['外键', '主键', '候选键', '联合键'],
-        answer: 1,
-        explanation: '主键的核心作用就是唯一标识记录，而且通常不允许重复、不能为空。'
+        tag: '用户与角色',
+        question: '关于 ALTER USER 的使用，下列哪项正确？',
+        options: ['既能改密码也能直接改角色', '只能修改自己的所有属性和他人的角色', '不能修改用户角色，角色变更应通过 GRANT/REVOKE', 'ALTER USER 只用于删除用户'],
+        answer: 2,
+        explanation: 'ALTER USER 能处理密码等部分属性，但不能改角色。角色授予和回收要走 GRANT / REVOKE。别把用户管理和角色管理揉成一锅。'
       },
       {
         id: 7,
-        tag: 'SQL 基础',
-        question: 'SQL 语言中，用于查询数据的语句是：',
-        options: ['INSERT', 'UPDATE', 'DELETE', 'SELECT'],
-        answer: 3,
-        explanation: 'SELECT 负责查，INSERT 负责加，UPDATE 负责改，DELETE 负责删。四大金刚别认错。'
+        tag: '最小权限控制',
+        question: '如果要只开放某张表中的部分字段，或者只让用户看到满足特定条件的数据，按笔记中更稳妥的做法应是：',
+        options: ['直接把全表 SELECT 授给 PUBLIC', '先建视图，再把视图权限授给目标用户', '授予 SELECT ANY TABLE', '把表复制一份给用户'],
+        answer: 1,
+        explanation: '这是笔记里非常明确的“按条件授权思路”：视图 + 授权，比直接裸奔式授权稳太多。'
       },
       {
         id: 8,
-        tag: 'SQL 基础',
-        question: 'SQL 语言中，用于向表中新增数据的语句是：',
-        options: ['INSERT', 'CREATE', 'ALTER', 'DROP'],
-        answer: 0,
-        explanation: 'INSERT 是插入数据，CREATE 是创建对象，ALTER 是修改结构，DROP 是删除对象。'
+        tag: 'PUBLIC 授权',
+        question: '以下对 PUBLIC 授权的理解，哪项最准确？',
+        options: ['只影响当前模式中的当前用户', 'PUBLIC 等同于某个预定义角色，影响范围很小', 'PUBLIC 表示所有用户，因此授权时必须格外谨慎', 'PUBLIC 只能接收对象权限，不能接收任何其他权限'],
+        answer: 2,
+        explanation: '给 PUBLIC 授权本质上是在给“所有用户”开口子。题不难，坑在于很多人低估它的影响面。'
       },
       {
         id: 9,
-        tag: 'SQL 基础',
-        question: 'SQL 语言中，用于修改表中已有数据的语句是：',
-        options: ['CHANGE', 'MODIFY', 'UPDATE', 'EDIT'],
-        answer: 2,
-        explanation: '标准 SQL 里改数据用 UPDATE。别让英语直觉把你带去不存在的关键字。'
+        tag: '子查询/语法',
+        question: '关于对象名、变量名等标识符在 SQL 中的写法，根据你的笔记更合理的是：',
+        options: ['为了保险，一律加单引号', '对象名通常不是字符串，不能乱加单引号', '对象名必须放在双单引号中', '只有视图名不能加单引号，其他都可以'],
+        answer: 1,
+        explanation: '标识符不是字符串。对子查询、删约束、删视图这类语句，乱给对象名加单引号，特别容易把自己坑出语法错误。'
       },
       {
         id: 10,
-        tag: 'SQL 基础',
-        question: 'SQL 语言中，用于删除表结构的语句是：',
-        options: ['REMOVE TABLE', 'DELETE TABLE', 'DROP TABLE', 'CLEAR TABLE'],
+        tag: '视图',
+        question: '下列哪种视图最有可能支持直接更新？',
+        options: ['包含 GROUP BY 的聚合视图', '包含 DISTINCT 的单表视图', '基于单表且不含 JOIN、UNION、聚合函数的视图', '跨多表 JOIN 的复杂视图'],
         answer: 2,
-        explanation: 'DROP TABLE 是删除表结构；DELETE 是删表里的数据，不删表本身。'
+        explanation: '可更新视图通常要求足够“朴素”：单表、无 GROUP BY / HAVING / DISTINCT / UNION / JOIN / 聚合函数等。复杂了就大概率只能查。'
       },
       {
         id: 11,
-        tag: '主键',
-        question: '下列关于主键的说法，正确的是：',
-        options: ['主键允许重复', '主键可以为空', '主键用于唯一标识记录', '一张表必须有多个主键'],
-        answer: 2,
-        explanation: '主键的灵魂就是“唯一标识”。一般不允许重复，也不应为空。'
+        tag: 'WITH CHECK OPTION',
+        question: '在定义视图时加入 WITH CHECK OPTION，其主要约束效果是：',
+        options: ['禁止任何人查询该视图', '通过该视图插入或更新后的数据必须满足视图条件', '自动为视图建立唯一索引', '只允许管理员删除视图'],
+        answer: 1,
+        explanation: 'WITH CHECK OPTION 的重点不在查，而在写。通过这个视图去 INSERT / UPDATE，结果必须继续满足视图本身的筛选条件。'
       },
       {
         id: 12,
-        tag: '外键',
-        question: '外键的主要作用是：',
-        options: ['提高输入速度', '保证参照完整性', '自动生成报表', '备份数据库'],
-        answer: 1,
-        explanation: '外键主要用于维护表与表之间的引用关系，防止出现“父表没这条、子表硬说有”的离谱情况。'
+        tag: '索引',
+        question: '关于索引的理解，下列哪项最符合你的笔记？',
+        options: ['索引越多越好，查询一定越快', '索引只分主键索引和普通索引两类', '索引主要用于提高查询速度，但不是越多越好', '函数索引不属于索引类型'],
+        answer: 2,
+        explanation: '索引的目标是提速，但维护也有成本。你笔记里明确提醒：不是越多越好。别把数据库整成“索引展示馆”。'
       },
       {
         id: 13,
-        tag: '索引',
-        question: '为了提高查询效率，数据库中常使用：',
-        options: ['约束', '索引', '触发器', '视图'],
-        answer: 1,
-        explanation: '索引的核心作用就是提高查询速度，但也会带来额外存储和写入维护成本。'
+        tag: '窗口函数',
+        question: '如果希望“每个部门按工资从高到低编号，并且即使工资并列也强制给出唯一顺序编号”，优先应选择：',
+        options: ['RANK()', 'DENSE_RANK()', 'ROW_NUMBER()', 'COUNT()'],
+        answer: 2,
+        explanation: 'ROW_NUMBER() 是顺序编号，不管并列与否都给唯一序号；RANK() 会跳号，DENSE_RANK() 不跳号但并列同名次。'
       },
       {
         id: 14,
-        tag: '事务',
-        question: '关于事务的说法，正确的是：',
-        options: ['事务中的操作必须全部成功或全部失败', '事务只适用于查询语句', '事务执行后不能回滚', '一个数据库不能有事务'],
-        answer: 0,
-        explanation: '这说的是事务的原子性：要么全成，要么全撤，不搞半死不活。'
+        tag: 'EXISTS',
+        question: '关于 EXISTS 的执行逻辑，下列哪项更准确？',
+        options: ['只在外层查询执行结束后统一判断一次', '对外层查询的每一行逐行判断子查询是否成立', '先执行 EXISTS 再决定是否生成外层结果集', '只能用于没有关联条件的子查询'],
+        answer: 1,
+        explanation: '你的神通笔记里专门写了：EXISTS 是对外层查询的每一行逐行判断，非常适合“是否存在异常记录”这类问题。'
       },
       {
         id: 15,
-        tag: 'ACID',
-        question: '事务的 ACID 特性中，A 指的是：',
-        options: ['Accuracy', 'Atomicity', 'Activity', 'Access'],
+        tag: '神通语法差异',
+        question: '在神通数据库中计算 10 除以 3 的余数，更符合笔记写法的是：',
+        options: ['SELECT 10 % 3;', 'SELECT mod(10, 3);', 'SELECT rem(10, 3);', 'SELECT 10 modulo 3;'],
         answer: 1,
-        explanation: 'A 是 Atomicity，原子性。ACID 里最容易靠英语瞎蒙，但别蒙偏了。'
+        explanation: '这题就是神通和别家数据库的“手感差异题”。你的笔记明确写了：取余用 mod()，不用 %。'
       },
       {
         id: 16,
-        tag: '备份恢复',
-        question: '数据库备份的主要目的是：',
-        options: ['提高输入速度', '增加表数量', '防止数据丢失、便于恢复', '自动编写程序'],
-        answer: 2,
-        explanation: '备份不是仪式感，是兜底手段。真出事时，恢复能力比嘴硬重要。'
+        tag: '字符处理',
+        question: '两个字段看起来完全一样，但连接或比较时总匹配失败。根据你的笔记，最优先怀疑的是：',
+        options: ['数据库不支持等值比较', '存在不可见空格或前后空白等脏数据', '索引类型不够高级', '一定是字段编码不同且无法处理'],
+        answer: 1,
+        explanation: '这种题最阴。很多时候不是值不同，而是脏数据在搞鬼。TRIM、REPLACE、长度函数就是这时候的排雷三件套。'
       },
       {
         id: 17,
-        tag: '安全管理',
-        question: '在数据库安全管理中，用来限制不同用户操作权限的是：',
-        options: ['排序', '授权', '压缩', '联接'],
-        answer: 1,
-        explanation: '权限控制靠授权实现。谁能查、谁能改、谁能删，都得靠权限体系管起来。'
+        tag: '统计函数',
+        question: '关于 count(*)、count(列)、count(distinct 列) 的区别，下列说法正确的是：',
+        options: ['三者结果永远一致', 'count(列) 会统计所有行，包括空值', 'count(distinct 列) 统计该列非空且去重后的行数', 'count(*) 只统计主键非空的行'],
+        answer: 2,
+        explanation: 'count(*) 统计所有行；count(列) 只统计该列非空行；count(distinct 列) 还要再去重。审计取数时，这几个结果不一样非常常见。'
       },
       {
         id: 18,
-        tag: '视图',
-        question: '视图（View）的主要作用之一是：',
-        options: ['永久存储所有原始数据', '提供数据的逻辑展示与安全控制', '替代所有数据表', '自动删除重复数据'],
+        tag: '整数除法',
+        question: '在做比例、增长率、平均值计算时，为什么要特别小心“整数 ÷ 整数”？',
+        options: ['因为数据库会自动把它转成字符串', '因为小数部分可能被直接省略，结果失真', '因为整数除法一定报错', '因为只有 Oracle 才支持整数除法'],
         answer: 1,
-        explanation: '视图更像一个逻辑窗口，方便展示特定数据，也常用于控制用户可见范围。'
+        explanation: '这类坑最狠的地方是“它不报错”。结果看着正常，实际早就被截断了，所以做除法前先确认类型。'
       },
       {
         id: 19,
-        tag: '表关系',
-        question: '关系数据库中，两个表之间建立联系通常依靠：',
-        options: ['主键和外键', '字段长度', '表名相同', '创建时间一致'],
-        answer: 0,
-        explanation: '表关系通常通过主键和外键建立，不靠缘分，也不靠同名碰瓷。'
+        tag: 'CTE / WITH AS',
+        question: 'WITH temp AS (...) SELECT * FROM temp; 这类写法的核心作用是：',
+        options: ['永久创建一张物理表', '先定义临时结果集，再参与后续查询', '只能用于视图更新', '强制让查询走索引'],
+        answer: 1,
+        explanation: 'WITH AS 是公共表达式（CTE），作用是先起一个临时结果集名字，方便后续引用，不是落地成永久表。'
       },
       {
         id: 20,
-        tag: '国产数据库意义',
-        question: '下列说法中，最符合国产数据库发展意义的是：',
-        options: ['仅仅是更换英文界面', '有助于信息技术应用创新与自主可控', '只能用于学校机房', '不能支持企业级应用'],
+        tag: '命名空间',
+        question: '关于数据库对象命名空间的理解，下列哪项更符合你的笔记？',
+        options: ['所有数据库对象都共享一个统一命名空间', '模式对象通常共用一个命名空间，而非模式对象通常各自拥有各自的命名空间', '只有用户和表空间共用命名空间', '命名空间只影响索引，不影响表和视图'],
         answer: 1,
-        explanation: '国产数据库的意义不只是“换个牌子”，更关键在于自主可控、产业生态和关键场景落地。'
+        explanation: '你笔记里区分得很清楚：模式对象之间往往共用命名空间，非模式对象通常各管各的。所以起名不是想怎么来就怎么来。'
       }
     ];
 
@@ -484,10 +484,10 @@
       const answeredCount = state.answered.size;
       const wrongCount = state.wrongs.size;
       if (!answeredCount) {
-        summaryText.textContent = '先把题点完。底部按钮会把你这次做错的题导出成 Markdown，方便继续回炉重造。';
+        summaryText.textContent = '这版更像考试里的“拐弯题”。先做，错了再看解析，记得把错题导出去慢慢收拾。';
         return;
       }
-      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点“导出错题 Markdown”，就能把错题带走复盘。`;
+      summaryText.textContent = `当前已作答 ${answeredCount}/${questions.length} 题，错了 ${wrongCount} 题。做完后点“导出错题 Markdown”，就能把这次翻车点整包带走。`;
     }
 
     function handleAnswer(card, q, selectedIndex) {
@@ -518,7 +518,7 @@
 
       exp.classList.add('show', isCorrect ? 'correct-mode' : 'wrong-mode');
       exp.innerHTML = `
-        <div class="result-line">${isCorrect ? '答对了，继续冲。' : '这题翻车了，但问题不大。'}</div>
+        <div class="result-line">${isCorrect ? '答对了，这题你扛住了。' : '这题被语法细节背刺了。'}</div>
         <div><strong>正确答案：</strong>${String.fromCharCode(65 + q.answer)}. ${escapeHtml(q.options[q.answer])}</div>
         ${!isCorrect ? `<div><strong>你选择的是：</strong>${String.fromCharCode(65 + selectedIndex)}. ${escapeHtml(q.options[selectedIndex])}</div>` : ''}
         <div style="margin-top:6px;"><strong>解析：</strong>${escapeHtml(q.explanation)}</div>
@@ -572,7 +572,7 @@
     function exportWrongAnswersMarkdown() {
       const wrongItems = [...state.wrongs.values()];
       if (!wrongItems.length) {
-        alert('当前还没有错题可导出。要么你太强了，要么还没开始做。');
+        alert('当前还没有错题可导出。要么你太猛了，要么还没开始做。');
         return;
       }
 
@@ -581,9 +581,9 @@
       const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
 
       const lines = [
-        '# 国产数据库错题本',
+        '# 国产数据库高阶错题本',
         '',
-        '- 来源：sk 生成的国产数据库 20 题标准版',
+        '- 来源：飞书笔记《国产数据库学习笔记-2026-03-20》《国产数据库学习笔记-2026-03-17》《国产数据库学习笔记（神通数据库）》',
         `- 导出时间：${ts}`,
         `- 错题数量：${wrongItems.length}`,
         '',
@@ -601,7 +601,7 @@
         lines.push('');
       });
 
-      downloadBlob(`domestic-db-wrong-answers-${stamp}.md`, lines.join('\n'), 'text/markdown;charset=utf-8');
+      downloadBlob(`domestic-db-advanced-wrong-answers-${stamp}.md`, lines.join('\n'), 'text/markdown;charset=utf-8');
     }
 
     function resetQuiz() {
