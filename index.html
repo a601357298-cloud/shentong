@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>图数据库刷题页</title>
+  <title>国产数据库刷题页</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -265,16 +265,16 @@
   <div class="container">
     <section class="hero">
       <div class="badge">静态网站 · index.html</div>
-      <h1>图数据库刷题页</h1>
-      <p class="lead">题目整理自 3 篇飞书图数据库笔记：基础认知、Cypher 易错点、路径查询、建模原则、CSV 导入、最短路径、字符串处理与类型转换。点击任意选项后，会直接在题目下方显示对错和解析；底部支持导出错题 Markdown。</p>
+      <h1>国产数据库刷题页</h1>
+      <p class="lead">这版先按你要的 20 题标准版来，覆盖国产数据库通识、关系模型、SQL 基础、主键外键、事务、索引、备份、安全控制这些高频考点。点任意选项后，会直接显示对错和解析；底部支持导出错题 Markdown。</p>
       <div class="meta">
         <div class="meta-card">
           <strong>20</strong>
           <span>道单选题</span>
         </div>
         <div class="meta-card">
-          <strong>3</strong>
-          <span>来源文档：图数据库学习笔记 / 2026-03-24 / 2026-03-26</span>
+          <strong>国产数据库</strong>
+          <span>通识 + 基础 SQL + 数据库核心概念</span>
         </div>
         <div class="meta-card">
           <strong>错题导出</strong>
@@ -294,255 +294,170 @@
       </div>
     </section>
 
-    <p class="footer">复习建议：别只背答案，重点理解为什么要先聚合再连接、为什么 MERGE 只认身份字段、为什么 [] 和 [*] 不是一回事。</p>
+    <p class="footer">复习建议：别只背 A/B/C/D，重点搞懂主键、外键、事务、索引、备份这些概念，不然选择题做得像开盲盒。</p>
   </div>
 
   <script>
     const questions = [
       {
         id: 1,
-        tag: '基础认知',
-        question: '图数据库和传统关系型数据库相比，最突出的特点是什么？',
-        options: [
-          '更强调实体之间的关系',
-          '只能存储字符串类型数据',
-          '完全不支持条件过滤',
-          '所有查询都必须写存储过程'
-        ],
-        answer: 0,
-        explanation: '图数据库的核心不是“表有多整齐”，而是“关系网有多清楚”。它特别适合分析网络结构、上下游关系和关联路径。'
+        tag: '国产数据库通识',
+        question: '下列哪一项不属于常见的国产数据库产品？',
+        options: ['神通数据库', '达梦数据库', 'OceanBase', 'MongoDB'],
+        answer: 3,
+        explanation: '神通、达梦、OceanBase 都是常见国产数据库产品；MongoDB 是国外的文档型数据库。'
       },
       {
         id: 2,
-        tag: '语法元素',
-        question: '在 Cypher 中，节点使用什么符号表示？',
-        options: ['[]', '()', '{}', '<>'],
+        tag: '数据库基础',
+        question: '数据库管理系统中，负责对数据进行统一管理和控制的软件称为：',
+        options: ['操作系统', '数据库管理系统', '编译程序', 'Office 软件'],
         answer: 1,
-        explanation: '小括号 () 表示节点，中括号 [] 表示关系，大括号 {} 表示属性。别三兄弟认错人。'
+        explanation: '题干其实已经把答案递到你手边了，负责数据统一管理和控制的就是 DBMS。'
       },
       {
         id: 3,
-        tag: '关系方向',
-        question: '下面哪种写法正确表达了有方向的关系？',
-        options: [
-          '(p)<KNOWS>(f)',
-          '(p)-[:KNOWS]->(f)',
-          '(p){:KNOWS}(f)',
-          '(p)->[KNOWS](f)'
-        ],
+        tag: '数据库目标',
+        question: '数据库系统的核心目标之一是：',
+        options: ['只用于存图片', '实现数据的共享、管理与控制', '替代所有应用软件', '只支持单用户访问'],
         answer: 1,
-        explanation: '关系写在中括号里，方向靠箭头表达。箭头不是装饰，是语义。'
+        explanation: '数据库不是仓库摆件，它的核心价值在于高效存储、共享、管理和控制数据。'
       },
       {
         id: 4,
-        tag: 'CREATE vs MERGE',
-        question: '关于 CREATE 和 MERGE，下列说法正确的是？',
-        options: [
-          'CREATE 会先查重，MERGE 永远新建',
-          'CREATE 和 MERGE 没区别',
-          'CREATE 永远新建，MERGE 先找没有才建',
-          'MERGE 只能用于关系，不能用于节点'
-        ],
-        answer: 2,
-        explanation: 'CREATE 是直接建，重复执行会重复创建；MERGE 是先找，没有才建。导入数据时这俩分工很关键。'
+        tag: '关系模型',
+        question: '在关系数据库中，表中的一行通常称为：',
+        options: ['字段', '记录', '模式', '视图'],
+        answer: 1,
+        explanation: '一行是一条记录，一列是一个字段。这个属于数据库入门必考送分题。'
       },
       {
         id: 5,
-        tag: '更新语法',
-        question: '更新节点属性时，正确的语句顺序是？',
-        options: [
-          'MATCH ... SET ... WHERE ...',
-          'MATCH ... WHERE ... SET ...',
-          'SET ... WHERE ... MATCH ...',
-          'WHERE ... MATCH ... SET ...'
-        ],
-        answer: 1,
-        explanation: 'WHERE 要写在 SET 前面。这个顺序写反，是课堂常见翻车点。'
+        tag: '关系模型',
+        question: '在关系数据库中，表中的一列通常称为：',
+        options: ['元组', '记录', '字段', '索引'],
+        answer: 2,
+        explanation: '列对应字段，行对应记录。别把“元组”这类术语和日常表述搞串了。'
       },
       {
         id: 6,
-        tag: '属性删除',
-        question: '在 Neo4j 中，如果想删除某个属性，常见做法是？',
-        options: [
-          'DELETE p.age',
-          'SET p.age = null',
-          'DROP p.age',
-          'TRUNCATE p.age'
-        ],
+        tag: '键约束',
+        question: '用来唯一标识表中一条记录的键称为：',
+        options: ['外键', '主键', '候选键', '联合键'],
         answer: 1,
-        explanation: '把属性设成 null，等价于删除该属性。这点和很多 SQL 直觉不一样。'
+        explanation: '主键的核心作用就是唯一标识记录，而且通常不允许重复、不能为空。'
       },
       {
         id: 7,
-        tag: 'EXISTS',
-        question: '关于 EXISTS 的使用，下列哪项正确？',
-        options: [
-          'EXISTS() 里面必须再嵌套 MATCH',
-          'EXISTS(n.name) 可用于判断属性是否存在',
-          'EXISTS 只能用于路径变量',
-          'EXISTS 只能放在 RETURN 里'
-        ],
-        answer: 1,
-        explanation: 'EXISTS() 常直接写属性或条件，不需要下意识再套一层 MATCH。'
+        tag: 'SQL 基础',
+        question: 'SQL 语言中，用于查询数据的语句是：',
+        options: ['INSERT', 'UPDATE', 'DELETE', 'SELECT'],
+        answer: 3,
+        explanation: 'SELECT 负责查，INSERT 负责加，UPDATE 负责改，DELETE 负责删。四大金刚别认错。'
       },
       {
         id: 8,
-        tag: '标签判断',
-        question: '判断节点 n 是否属于“人员”标签，正确写法是？',
-        options: ['n = 人员', 'n.type = 人员', 'n:人员', 'n -> 人员'],
-        answer: 2,
-        explanation: '标签判断用冒号 :，不是等号 =。这题属于“看着像小问题，其实最容易写错”。'
+        tag: 'SQL 基础',
+        question: 'SQL 语言中，用于向表中新增数据的语句是：',
+        options: ['INSERT', 'CREATE', 'ALTER', 'DROP'],
+        answer: 0,
+        explanation: 'INSERT 是插入数据，CREATE 是创建对象，ALTER 是修改结构，DROP 是删除对象。'
       },
       {
         id: 9,
-        tag: '路径函数',
-        question: '如果想取出路径 p 上的所有节点，应该用哪个函数？',
-        options: ['nodes(p)', 'relationships(p)', 'labels(p)', 'keys(p)'],
-        answer: 0,
-        explanation: 'nodes(p) 返回路径上的节点集合；relationships(p) 返回路径上的关系集合。别张冠李戴。'
+        tag: 'SQL 基础',
+        question: 'SQL 语言中，用于修改表中已有数据的语句是：',
+        options: ['CHANGE', 'MODIFY', 'UPDATE', 'EDIT'],
+        answer: 2,
+        explanation: '标准 SQL 里改数据用 UPDATE。别让英语直觉把你带去不存在的关键字。'
       },
       {
         id: 10,
-        tag: 'all / any',
-        question: '关于 all(...) 和 any(...)，下列说法正确的是？',
-        options: [
-          'all 表示任意一个满足，any 表示全部满足',
-          'all 和 any 完全等价',
-          'all 表示全部满足，any 表示任意一个满足',
-          '它们只能用于数值计算，不能用于路径节点过滤'
-        ],
+        tag: 'SQL 基础',
+        question: 'SQL 语言中，用于删除表结构的语句是：',
+        options: ['REMOVE TABLE', 'DELETE TABLE', 'DROP TABLE', 'CLEAR TABLE'],
         answer: 2,
-        explanation: 'all 是“全都得过关”，any 是“有一个过关就行”。路径中过滤中间节点时很常用。'
+        explanation: 'DROP TABLE 是删除表结构；DELETE 是删表里的数据，不删表本身。'
       },
       {
         id: 11,
-        tag: '最短路径',
-        question: 'shortestPath() 和 allShortestPaths() 的区别是？',
-        options: [
-          '前者返回一条最短路径，后者返回所有同长最短路径',
-          '前者返回所有路径，后者返回一条路径',
-          '两者只在 SQL 中有区别，Cypher 中相同',
-          '前者只能查关系，后者只能查节点'
-        ],
-        answer: 0,
-        explanation: 'shortestPath() 找一条最短路径，allShortestPaths() 找所有同样短的最短路径。'
+        tag: '主键',
+        question: '下列关于主键的说法，正确的是：',
+        options: ['主键允许重复', '主键可以为空', '主键用于唯一标识记录', '一张表必须有多个主键'],
+        answer: 2,
+        explanation: '主键的灵魂就是“唯一标识”。一般不允许重复，也不应为空。'
       },
       {
         id: 12,
-        tag: '跳数',
-        question: '在路径模式里，[] 和 [*] 分别表示什么？',
-        options: [
-          '[] 多跳，[*] 一跳',
-          '[] 一跳，[*] 多跳',
-          '两者都只表示一跳',
-          '两者都表示任意多跳'
-        ],
+        tag: '外键',
+        question: '外键的主要作用是：',
+        options: ['提高输入速度', '保证参照完整性', '自动生成报表', '备份数据库'],
         answer: 1,
-        explanation: '[] 是一跳，[*] 才是多跳。这个看起来小，做路径题时错一下就整题都偏了。'
+        explanation: '外键主要用于维护表与表之间的引用关系，防止出现“父表没这条、子表硬说有”的离谱情况。'
       },
       {
         id: 13,
-        tag: 'UNION',
-        question: '关于 UNION 的注意事项，下列哪项正确？',
-        options: [
-          '前后返回结构可以随便不同',
-          '只要列数一样，列名和类型都无所谓',
-          '前后结果最好保持列数、列名、类型一致',
-          'UNION 只能拼接 DELETE 语句'
-        ],
-        answer: 2,
-        explanation: 'UNION 不是乱拼。返回结构要对齐，列数、列名、类型最好都一致。'
+        tag: '索引',
+        question: '为了提高查询效率，数据库中常使用：',
+        options: ['约束', '索引', '触发器', '视图'],
+        answer: 1,
+        explanation: '索引的核心作用就是提高查询速度，但也会带来额外存储和写入维护成本。'
       },
       {
         id: 14,
-        tag: '模糊查询',
-        question: '如果要查询姓名中包含“张”的节点，最适合用哪个条件？',
-        options: [
-          'WHERE n.name LIKE 张',
-          'WHERE n.name CONTAINS \'张\'',
-          'WHERE n.name IN \'张\'',
-          'WHERE n.name == \'张\''
-        ],
-        answer: 1,
-        explanation: '包含用 CONTAINS，开头用 STARTS WITH，结尾用 ENDS WITH。Cypher 这套和 SQL 有点像，但不是原封不动。'
+        tag: '事务',
+        question: '关于事务的说法，正确的是：',
+        options: ['事务中的操作必须全部成功或全部失败', '事务只适用于查询语句', '事务执行后不能回滚', '一个数据库不能有事务'],
+        answer: 0,
+        explanation: '这说的是事务的原子性：要么全成，要么全撤，不搞半死不活。'
       },
       {
         id: 15,
-        tag: 'substring',
-        question: '关于 substring()，下列说法正确的是？',
-        options: [
-          '下标从 1 开始',
-          '下标从 0 开始',
-          '只能截取数字字段',
-          '不能用于 WHERE 条件判断'
-        ],
+        tag: 'ACID',
+        question: '事务的 ACID 特性中，A 指的是：',
+        options: ['Accuracy', 'Atomicity', 'Activity', 'Access'],
         answer: 1,
-        explanation: 'substring() 的下标从 0 开始。这个坑和很多语言一致，背错就会整段偏移。'
+        explanation: 'A 是 Atomicity，原子性。ACID 里最容易靠英语瞎蒙，但别蒙偏了。'
       },
       {
         id: 16,
-        tag: '编号字段',
-        question: '身份证号、公司编号、项目编号这类字段，为什么更推荐存成字符串？',
-        options: [
-          '因为字符串查询更慢',
-          '因为它们不能比较大小',
-          '因为可能很长、带前导零，数字类型可能失真',
-          '因为图数据库不支持数字类型'
-        ],
+        tag: '备份恢复',
+        question: '数据库备份的主要目的是：',
+        options: ['提高输入速度', '增加表数量', '防止数据丢失、便于恢复', '自动编写程序'],
         answer: 2,
-        explanation: '编号类字段经常有前导零，也可能位数很长。存成数字，轻则丢零，重则精度翻车。'
+        explanation: '备份不是仪式感，是兜底手段。真出事时，恢复能力比嘴硬重要。'
       },
       {
         id: 17,
-        tag: '建模原则',
-        question: '图数据库建模中的“核心三分法”是？',
-        options: [
-          '实体做属性，联系做节点，描述做关系',
-          '实体做节点，联系做关系，描述做属性',
-          '实体做关系，联系做属性，描述做节点',
-          '实体、联系、描述全部做节点'
-        ],
+        tag: '安全管理',
+        question: '在数据库安全管理中，用来限制不同用户操作权限的是：',
+        options: ['排序', '授权', '压缩', '联接'],
         answer: 1,
-        explanation: '这就是建模的主干：实体做节点，联系做关系，描述做属性。顺序别串戏。'
+        explanation: '权限控制靠授权实现。谁能查、谁能改、谁能删，都得靠权限体系管起来。'
       },
       {
         id: 18,
-        tag: '核心对象抽节点',
-        question: '在审批场景里，为什么更推荐“审批部门 -> 项目 <- 公司”，而不是直接“审批部门 -> 公司”？',
-        options: [
-          '因为项目才是中间核心对象',
-          '因为公司不能当节点',
-          '因为审批部门不能建关系',
-          '因为项目编号必须做数组'
-        ],
-        answer: 0,
-        explanation: '如果两个实体之间的联系是通过第三个核心对象发生的，就应优先把这个核心对象抽成节点。审批场景里，“项目”才是核心事件。'
+        tag: '视图',
+        question: '视图（View）的主要作用之一是：',
+        options: ['永久存储所有原始数据', '提供数据的逻辑展示与安全控制', '替代所有数据表', '自动删除重复数据'],
+        answer: 1,
+        explanation: '视图更像一个逻辑窗口，方便展示特定数据，也常用于控制用户可见范围。'
       },
       {
         id: 19,
-        tag: 'CSV 导入',
-        question: '关于 CSV 导入，下面哪项更稳妥？',
-        options: [
-          'CSV 编码无所谓，只要扩展名对',
-          '允许有空行，数据库会自动忽略所有问题',
-          '导入时应确保 UTF-8 编码且尽量不要有空行',
-          '导入前不需要检查表头'
-        ],
-        answer: 2,
-        explanation: 'CSV 导入最基础的两个点：UTF-8 编码、别有空行。不然很容易乱码、错位、读取异常。'
+        tag: '表关系',
+        question: '关系数据库中，两个表之间建立联系通常依靠：',
+        options: ['主键和外键', '字段长度', '表名相同', '创建时间一致'],
+        answer: 0,
+        explanation: '表关系通常通过主键和外键建立，不靠缘分，也不靠同名碰瓷。'
       },
       {
         id: 20,
-        tag: 'MERGE + SET / 类型转换',
-        question: '下面哪种写法最符合“MERGE 认身份，SET 补描述”的稳妥原则？',
-        options: [
-          'MERGE (a:公司 {公司编号: row.公司编号, 公司名称: row.公司名称, 建筑资质: row.建筑资质})',
-          'MERGE (a:公司 {公司编号: row.公司编号}) SET a.公司名称 = row.公司名称, a.建筑资质 = row.建筑资质',
-          'CREATE (a:公司 {公司编号: row.公司编号}) 再重复执行多次',
-          '先把所有属性都转成整数，再决定怎么导入'
-        ],
+        tag: '国产数据库意义',
+        question: '下列说法中，最符合国产数据库发展意义的是：',
+        options: ['仅仅是更换英文界面', '有助于信息技术应用创新与自主可控', '只能用于学校机房', '不能支持企业级应用'],
         answer: 1,
-        explanation: '唯一标识放进 MERGE，其他描述字段交给 SET。这样后续补数据、重复导入、字段更新时更稳，也更不容易误造新节点。'
+        explanation: '国产数据库的意义不只是“换个牌子”，更关键在于自主可控、产业生态和关键场景落地。'
       }
     ];
 
@@ -666,9 +581,9 @@
       const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
 
       const lines = [
-        '# 图数据库错题本',
+        '# 国产数据库错题本',
         '',
-        '- 来源：图数据库学习笔记 / 图数据库学习笔记-2026-03-24 / 图数据库学习笔记-2026-03-26',
+        '- 来源：sk 生成的国产数据库 20 题标准版',
         `- 导出时间：${ts}`,
         `- 错题数量：${wrongItems.length}`,
         '',
@@ -686,7 +601,7 @@
         lines.push('');
       });
 
-      downloadBlob(`graph-quiz-wrong-answers-${stamp}.md`, lines.join('\n'), 'text/markdown;charset=utf-8');
+      downloadBlob(`domestic-db-wrong-answers-${stamp}.md`, lines.join('\n'), 'text/markdown;charset=utf-8');
     }
 
     function resetQuiz() {
